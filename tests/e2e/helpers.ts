@@ -8,6 +8,11 @@ export const DEMAND_WITHDRAW: QuizAnswers = {
   Q26: "conversation", Q27: "1_3y", Q28: 8, Q29: "weeks", Q30: "can", Q31: "no",
 };
 
+/** Espera a tela `s` sair do DOM (animação de saída). */
+export async function leave(page: Page, s: string) {
+  await expect(page.locator(`[data-screen="${s}"]`)).toBeHidden({ timeout: 5000 });
+}
+
 export async function currentScreen(page: Page): Promise<string> {
   const el = page.locator("[data-screen]").last();
   await el.waitFor();
@@ -33,8 +38,8 @@ export async function driveTo(page: Page, answers: QuizAnswers, until: string) {
   for (let i = 0; i < 80; i++) {
     const s = await currentScreen(page);
     if (s === until) return;
-    if (s === "hero") { await page.getByTestId("start").click(); continue; }
-    if (s === "how" || s.startsWith("i") || s === "partial" || s === "pre") { await page.getByTestId("continue").click(); continue; }
+    if (s === "hero") { await page.getByTestId("start").click(); await leave(page, s); continue; }
+    if (s === "how" || s.startsWith("i") || s === "partial" || s === "pre") { await page.getByTestId("continue").click(); await leave(page, s); continue; }
     if (/^Q\d\d$/.test(s)) {
       const v = answers[s as keyof QuizAnswers];
       if (v === undefined) throw new Error(`sem resposta para ${s}`);
@@ -48,10 +53,10 @@ export async function driveTo(page: Page, answers: QuizAnswers, until: string) {
 
 export async function capture(page: Page, name = "Renata", phone = "11999990000", email: string | null = null) {
   await expect(page.locator('[data-screen="name"]')).toBeVisible();
-  await page.fill("#lead_name", name); await page.getByTestId("confirm").click();
+  await page.fill("#lead_name", name); await page.getByTestId("confirm").click(); await leave(page, "name");
   await expect(page.locator('[data-screen="phone"]')).toBeVisible();
   await expect(page.locator("text=" + name + ", qual é o seu WhatsApp?")).toBeVisible();
-  await page.fill("#lead_whatsapp", phone); await page.getByTestId("confirm").click();
+  await page.fill("#lead_whatsapp", phone); await page.getByTestId("confirm").click(); await leave(page, "phone");
   await expect(page.locator('[data-screen="email"]')).toBeVisible();
   // consentimento não vem marcado e é obrigatório
   await page.getByTestId("confirm").click();

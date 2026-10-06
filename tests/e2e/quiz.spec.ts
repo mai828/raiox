@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { DEMAND_WITHDRAW, answerQuestion, capture, currentScreen, driveTo } from "./helpers";
+import { DEMAND_WITHDRAW, answerQuestion, capture, currentScreen, driveTo, leave } from "./helpers";
 
 test.describe("Raio-X do Seu Relacionamento", () => {
   test("fluxo completo no celular: perguntas, microdevolutivas, retrato, captura, processamento e resultado", async ({ page }) => {
@@ -7,6 +7,7 @@ test.describe("Raio-X do Seu Relacionamento", () => {
     await expect(page.getByRole("heading", { name: "Raio-X do Seu Relacionamento" })).toBeVisible();
     // Nenhuma contagem de perguntas visível
     await page.getByTestId("start").click();
+    await leave(page, "hero");
     await expect(page.locator("text=/Pergunta \\d+ de/")).toHaveCount(0);
 
     await driveTo(page, DEMAND_WITHDRAW, "i1");
@@ -19,7 +20,7 @@ test.describe("Raio-X do Seu Relacionamento", () => {
     await driveTo(page, DEMAND_WITHDRAW, "i4");
     await expect(page.getByText("Sua história não está aparecendo como explicação óbvia até aqui.")).toBeVisible();
     await driveTo(page, DEMAND_WITHDRAW, "pre");
-    await page.getByTestId("continue").click();
+    await page.getByTestId("continue").click(); await leave(page, "pre");
     await capture(page, "Renata", "11999990000", "renata@exemplo.com");
 
     await expect(page.locator('[data-screen="proc"]')).toBeVisible();
@@ -47,9 +48,9 @@ test.describe("Raio-X do Seu Relacionamento", () => {
     await page.goto("/");
     await driveTo(page, { ...DEMAND_WITHDRAW, Q04: "none", Q05: "rarely" }, "i1");
     await expect(page.getByText("A distância pode estar acontecendo antes mesmo das brigas.")).toBeVisible();
-    await page.getByRole("button", { name: "Voltar para a tela anterior" }).click();
+    await page.getByRole("button", { name: "Voltar para a tela anterior" }).click(); await leave(page, "i1");
     await expect(page.locator('[data-screen="Q05"] [data-option="rarely"]')).toHaveAttribute("aria-pressed", "true");
-    await page.getByRole("button", { name: "Voltar para a tela anterior" }).click();
+    await page.getByRole("button", { name: "Voltar para a tela anterior" }).click(); await leave(page, "Q05");
     await answerQuestion(page, "Q04", "four_plus");
     await answerQuestion(page, "Q05", "knows");
     await expect(page.getByText("Existe conexão preservada aqui.")).toBeVisible();
@@ -68,7 +69,7 @@ test.describe("Raio-X do Seu Relacionamento", () => {
     await page.goto("/");
     const a = { ...DEMAND_WITHDRAW, Q15: "natural", Q16: "na" };
     await driveTo(page, a, "pre");
-    await page.getByTestId("continue").click();
+    await page.getByTestId("continue").click(); await leave(page, "pre");
     await capture(page);
     await expect(page.getByTestId("result")).toBeVisible({ timeout: 15000 });
     const row = page.locator("li", { hasText: "Afeto e intimidade" }).first();
@@ -107,7 +108,7 @@ test.describe("Raio-X do Seu Relacionamento", () => {
   test("segurança: remove o fluxo comercial e mostra canais de apoio", async ({ page }) => {
     await page.goto("/");
     await driveTo(page, { ...DEMAND_WITHDRAW, Q31: "yes" }, "pre");
-    await page.getByTestId("continue").click();
+    await page.getByTestId("continue").click(); await leave(page, "pre");
     await capture(page, "Ana");
     await expect(page.getByText("Sua segurança vem antes de qualquer leitura sobre dinâmica de relacionamento.")).toBeVisible({ timeout: 15000 });
     await expect(page.getByText("190")).toBeVisible();
