@@ -29,7 +29,7 @@ test.describe("Raio-X do Seu Relacionamento", () => {
 
     const headline = await page.getByTestId("result-headline").textContent();
     expect(headline).toMatch(/afeto ainda existe|conversas/i);
-    await expect(page.getByText("Conseguir conversar sem acabar sempre no mesmo lugar")).toBeVisible();
+    await expect(page.getByText("Conseguir conversar sem acabar sempre no mesmo lugar").first()).toBeVisible();
     await expect(page.getByText("ele se fecha").first()).toBeVisible();
     await expect(page.getByText("Presa no Ciclo Cobrança-Afastamento")).toBeVisible();
     await expect(page.getByText("Minha hipótese a partir das suas respostas")).toBeVisible();
