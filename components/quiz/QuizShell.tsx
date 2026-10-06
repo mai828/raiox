@@ -94,7 +94,7 @@ export default function QuizShell() {
   };
 
   const progress = progressFor(flow, index);
-  const showResume = s.hydrated && !s.resumeOffered && s.current_screen > 0 && Object.keys(s.answers).length > 0;
+  const showResume = s.hydrated && s.resumeAvailable && !s.resumeOffered;
 
   if (!s.hydrated) return <main className="min-h-screen bg-bg" aria-busy="true" />;
 

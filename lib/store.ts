@@ -15,6 +15,8 @@ const emptyLead: Lead = { name: "", whatsapp: "", email: null, consent: false, c
 
 interface QuizState extends QuizSession {
   hydrated: boolean;
+  /** Verdadeiro só quando o estado veio do armazenamento com progresso real: aí oferecemos retomada. */
+  resumeAvailable: boolean;
   resumeOffered: boolean;
   payloadSent: boolean;
   setHydrated: () => void;
@@ -37,8 +39,13 @@ const fresh = (): QuizSession => ({
 export const useQuiz = create<QuizState>()(
   persist(
     (set) => ({
-      ...fresh(), hydrated: false, resumeOffered: false, payloadSent: false,
-      setHydrated: () => set({ hydrated: true }),
+      ...fresh(), hydrated: false, resumeAvailable: false, resumeOffered: false, payloadSent: false,
+      setHydrated: () => set((s) => {
+        const flow = buildFlow(s.answers);
+        const hasProgress = s.current_screen > 0 && Object.keys(s.answers).length > 0;
+        const atResult = flow[Math.min(s.current_screen, flow.length - 1)]?.kind === "result";
+        return { hydrated: true, resumeAvailable: hasProgress && !atResult };
+      }),
       setUtm: (u) => set((s) => ({ utm: mergeUtm(s.utm, u) })),
       answer: (qid, value) => set((s) => {
         const answers: QuizAnswers = { ...s.answers, [qid]: value };
