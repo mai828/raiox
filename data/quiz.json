@@ -1,0 +1,1436 @@
+{
+  "meta": {
+    "name": "RAIO-X DO SEU RELACIONAMENTO",
+    "subtitle": "Descubra o que pode estar mantendo seu relacionamento no mesmo lugar, mesmo depois de tudo que você já tentou.",
+    "brand": "Márcio Conceição",
+    "product": "Compatíveis",
+    "version": "1.0.0",
+    "score_scale": "0-3 por alternativa diagnóstica; 0 = padrão muito comprometido, 3 = maior consciência/capacidade de reorganização",
+    "pillars": {
+      "P1": {
+        "key": "clarity",
+        "name": "Clareza sobre o problema e consciência do padrão",
+        "field": "pillar_clarity_score",
+        "tag": "ATTENTION_CLARITY"
+      },
+      "P2": {
+        "key": "history",
+        "name": "História, família de origem e mochila emocional",
+        "field": "pillar_history_score",
+        "tag": "ATTENTION_HISTORY"
+      },
+      "P3": {
+        "key": "relationship",
+        "name": "Dinâmica relacional, presença e conexão",
+        "field": "pillar_relationship_score",
+        "tag": "ATTENTION_RELATIONSHIP"
+      },
+      "P4": {
+        "key": "boundaries",
+        "name": "Responsabilidade, limites e papéis",
+        "field": "pillar_boundaries_score",
+        "tag": "ATTENTION_BOUNDARIES"
+      },
+      "P5": {
+        "key": "action",
+        "name": "Reorganização, decisão e capacidade de agir",
+        "field": "pillar_action_score",
+        "tag": "ATTENTION_ACTION"
+      }
+    },
+    "pillar_impact_order": [
+      "P3",
+      "P4",
+      "P5",
+      "P1",
+      "P2"
+    ],
+    "profiles": {
+      "A": {
+        "key": "profile_overload",
+        "name": "A Sobrecarregada",
+        "tag": "PROFILE_OVERLOADED"
+      },
+      "B": {
+        "key": "profile_demand_withdraw",
+        "name": "Presa no ciclo cobrança-afastamento",
+        "tag": "PROFILE_DEMAND_WITHDRAW"
+      },
+      "C": {
+        "key": "profile_emotional_baggage",
+        "name": "Repetindo a mochila emocional",
+        "tag": "PROFILE_EMOTIONAL_BAGGAGE"
+      },
+      "D": {
+        "key": "profile_knows_but_repeats",
+        "name": "A que já entendeu, mas continua repetindo",
+        "tag": "PROFILE_KNOWS_BUT_REPEATS"
+      }
+    },
+    "attention_to_profile_fallback": {
+      "P1": "B",
+      "P2": "C",
+      "P3": "B",
+      "P4": "A",
+      "P5": "D"
+    },
+    "risk_flags": {
+      "external_focus": {
+        "pillar": "P1",
+        "label": "Foco exclusivo no parceiro como causa"
+      },
+      "history_unexamined": {
+        "pillar": "P2",
+        "label": "História nunca conectada ao presente"
+      },
+      "loneliness": {
+        "pillar": "P3",
+        "label": "Solidão emocional dentro da relação"
+      },
+      "emotional_shutdown": {
+        "pillar": "P3",
+        "label": "Desligamento afetivo / desistiu de falar"
+      },
+      "demand_withdraw": {
+        "pillar": "P3",
+        "label": "Ciclo cobrança-afastamento ativo"
+      },
+      "repetition_intense": {
+        "pillar": null,
+        "label": "Repetição há mais de 5 anos ou desde sempre"
+      },
+      "overload": {
+        "pillar": "P4",
+        "label": "Carrega praticamente tudo sozinha"
+      },
+      "conflict_avoidance": {
+        "pillar": "P4",
+        "label": "Assume tudo para evitar conflito"
+      },
+      "self_blame": {
+        "pillar": "P4",
+        "label": "Assume toda a culpa"
+      },
+      "partner_must_change": {
+        "pillar": "P4",
+        "label": "Só o parceiro precisa mudar",
+        "low_adherence": true
+      },
+      "only_if_partner_first": {
+        "pillar": "P4",
+        "label": "Só agiria se ele mudasse primeiro",
+        "low_adherence": true
+      },
+      "nothing_to_investigate": {
+        "pillar": "P4",
+        "label": "Nada a investigar em si",
+        "low_adherence": true
+      },
+      "resignation": {
+        "pillar": "P5",
+        "label": "Resignação / acostumar-se"
+      },
+      "knows_but_repeats": {
+        "pillar": "P5",
+        "label": "Compreende mas reage igual"
+      },
+      "wants_partner_fixed": {
+        "pillar": null,
+        "label": "Quer alguém que faça o parceiro mudar",
+        "low_adherence": true
+      },
+      "guarantee_required": {
+        "pillar": null,
+        "label": "Só com garantia de salvar o casamento",
+        "low_adherence": true
+      },
+      "decision_shared": {
+        "pillar": null,
+        "label": "Decisão de investimento compartilhada"
+      },
+      "decision_stay_or_leave": {
+        "pillar": null,
+        "label": "Busca decidir se fica ou vai"
+      },
+      "safety_violence": {
+        "pillar": null,
+        "label": "Violência, ameaça ou medo",
+        "safety": true
+      },
+      "safety_acute_distress": {
+        "pillar": null,
+        "label": "Sofrimento agudo / limite",
+        "safety": true
+      }
+    },
+    "irc_bands": [
+      {
+        "min": 0,
+        "max": 24,
+        "key": "automatic",
+        "name": "No automático"
+      },
+      {
+        "min": 25,
+        "max": 49,
+        "key": "emerging",
+        "name": "Começando a enxergar"
+      },
+      {
+        "min": 50,
+        "max": 74,
+        "key": "aware_but_repeating",
+        "name": "Enxergando, mas ainda repetindo"
+      },
+      {
+        "min": 75,
+        "max": 100,
+        "key": "hands_on_wheel",
+        "name": "Com a mão no volante"
+      }
+    ],
+    "commercial_bands": [
+      {
+        "min": 0,
+        "max": 2,
+        "key": "low",
+        "name": "Baixa prontidão",
+        "tag": "READINESS_LOW"
+      },
+      {
+        "min": 3,
+        "max": 3,
+        "key": "medium",
+        "name": "Prontidão intermediária",
+        "tag": "READINESS_MEDIUM"
+      },
+      {
+        "min": 4,
+        "max": 5,
+        "key": "qualified",
+        "name": "Lead qualificada",
+        "tag": "READINESS_QUALIFIED"
+      },
+      {
+        "min": 6,
+        "max": 7,
+        "key": "high",
+        "name": "Alta prioridade comercial",
+        "tag": "READINESS_HIGH"
+      }
+    ],
+    "lead_routes": {
+      "safety": "Orientação de segurança separada. Sem CTA comercial, sem automação de vendas. Revisão humana.",
+      "nurture_low_adherence": "Resultado completo + conteúdos de reposicionamento (participação própria). Sem sequência comercial automática.",
+      "sales_triage": "Resultado → WhatsApp → triagem → conversa de aplicação → oferta Compatíveis.",
+      "nurture": "Resultado → conteúdos de nutrição → nova chamada para conversa."
+    }
+  },
+  "questions": [
+    {
+      "id": "Q01",
+      "phase": 1,
+      "phase_name": "Reconhecimento",
+      "kind": "diagnostic",
+      "type": "single",
+      "field": "q01_symptom",
+      "pillar": "P1",
+      "weight": 1.0,
+      "goal": "Gerar identificação imediata com a queixa aparente e medir onde a pessoa localiza o problema hoje.",
+      "text": "Quando você pensa no seu relacionamento hoje, qual dessas frases mais parece com o que passa pela sua cabeça?",
+      "options": [
+        {
+          "id": "c",
+          "text": "Eu faço tudo sozinha. A casa, os filhos, a relação, tudo passa por mim.",
+          "score": 1,
+          "profiles": {
+            "A": 2
+          }
+        },
+        {
+          "id": "a",
+          "text": "Ele não muda. Já falei de todas as formas e nada.",
+          "score": 0,
+          "profiles": {
+            "B": 2
+          },
+          "flags": [
+            "external_focus"
+          ]
+        },
+        {
+          "id": "d",
+          "text": "A gente mora junto, mas não se encontra mais. Ele está ali e eu me sinto sozinha.",
+          "score": 1,
+          "profiles": {
+            "B": 1
+          },
+          "flags": [
+            "loneliness"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Eu sei explicar direitinho o que acontece entre a gente. Só não consigo fazer diferente na hora.",
+          "score": 2,
+          "profiles": {
+            "D": 2
+          }
+        },
+        {
+          "id": "e",
+          "text": "Talvez o problema seja eu. Talvez eu esteja exigindo demais, ou do jeito errado.",
+          "score": 1,
+          "profiles": {
+            "C": 1,
+            "D": 1
+          },
+          "flags": [
+            "self_blame"
+          ]
+        }
+      ],
+      "position_rationale": "Primeira pergunta porque a pessoa precisa se ver na tela em cinco segundos. As alternativas são as frases que ela já diz para si mesma; isso dá permissão para continuar e, sem ela perceber, já registra onde ela localiza o problema hoje: nele, em si ou na dinâmica."
+    },
+    {
+      "id": "Q02",
+      "phase": 1,
+      "phase_name": "Contexto",
+      "kind": "context",
+      "type": "single",
+      "field": "relationship_context",
+      "derived_fields": [
+        "relationship_status",
+        "relationship_years"
+      ],
+      "goal": "Situar a leitura: estado civil e tempo de relação em um único clique.",
+      "text": "Como está a sua situação hoje?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Casada ou morando junto há menos de 5 anos",
+          "derive": {
+            "relationship_status": "married_or_cohabiting",
+            "relationship_years": "<5"
+          }
+        },
+        {
+          "id": "b",
+          "text": "Casada ou morando junto há 5 a 10 anos",
+          "derive": {
+            "relationship_status": "married_or_cohabiting",
+            "relationship_years": "5-10"
+          }
+        },
+        {
+          "id": "c",
+          "text": "Casada ou morando junto há 11 a 20 anos",
+          "derive": {
+            "relationship_status": "married_or_cohabiting",
+            "relationship_years": "11-20"
+          }
+        },
+        {
+          "id": "d",
+          "text": "Casada ou morando junto há mais de 20 anos",
+          "derive": {
+            "relationship_status": "married_or_cohabiting",
+            "relationship_years": ">20"
+          }
+        },
+        {
+          "id": "e",
+          "text": "Namorando ou noiva, sem morar junto",
+          "derive": {
+            "relationship_status": "dating",
+            "relationship_years": "n/a"
+          }
+        },
+        {
+          "id": "f",
+          "text": "Separada ou em processo de separação, mas ainda envolvida nessa história",
+          "derive": {
+            "relationship_status": "separating",
+            "relationship_years": "n/a"
+          }
+        }
+      ],
+      "position_rationale": "Três cliques rápidos logo depois do reconhecimento inicial, antes de aprofundar: coletam contexto com atrito mínimo e dão ritmo. Ficam aqui, e não na abertura, para que a primeira tela seja emocional, não cadastral."
+    },
+    {
+      "id": "Q03",
+      "phase": 1,
+      "phase_name": "Contexto",
+      "kind": "context",
+      "type": "single",
+      "field": "has_children",
+      "goal": "Contexto de carga e de transmissão de padrões para os filhos.",
+      "text": "Vocês têm filhos?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Sim, crianças ou adolescentes em casa",
+          "value": "yes_home"
+        },
+        {
+          "id": "b",
+          "text": "Sim, já crescidos ou morando fora",
+          "value": "yes_adult"
+        },
+        {
+          "id": "c",
+          "text": "Não",
+          "value": "no"
+        }
+      ],
+      "position_rationale": "Segue a Q02 no bloco de contexto. Filhos mudam a leitura de carga (Perfil A) e de custo (transmissão de padrões). Também permite esconder a referência a filhos em telas posteriores quando a resposta é 'Não'."
+    },
+    {
+      "id": "Q04",
+      "phase": 1,
+      "phase_name": "Contexto",
+      "kind": "context",
+      "type": "single",
+      "field": "age_range",
+      "goal": "Aderência à persona principal (35 a 52).",
+      "text": "Qual é a sua faixa etária?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Até 34",
+          "value": "<=34"
+        },
+        {
+          "id": "b",
+          "text": "35 a 44",
+          "value": "35-44"
+        },
+        {
+          "id": "c",
+          "text": "45 a 52",
+          "value": "45-52"
+        },
+        {
+          "id": "d",
+          "text": "53 ou mais",
+          "value": ">=53"
+        }
+      ],
+      "position_rationale": "Fecha o bloco de contexto. A idade entra por último entre as três porque é a menos emocional; depois dela o quiz volta imediatamente para uma cena concreta."
+    },
+    {
+      "id": "Q05",
+      "phase": 1,
+      "phase_name": "Reconhecimento",
+      "kind": "diagnostic",
+      "type": "single",
+      "field": "q05_loneliness",
+      "pillar": "P3",
+      "weight": 1.25,
+      "goal": "Medir solidão emocional e presença. Cena concreta para a pessoa se reconhecer antes de interpretar.",
+      "text": "Fim de noite. A casa finalmente silencia e ele está ali, no sofá ou no celular. O que costuma acontecer dentro de você nesse momento?",
+      "options": [
+        {
+          "id": "b",
+          "text": "Irritação. Olho para ele descansando e penso em tudo que ficou nas minhas costas naquele dia.",
+          "score": 1,
+          "profiles": {
+            "A": 2
+          }
+        },
+        {
+          "id": "a",
+          "text": "Uma solidão difícil de explicar. Ele está do meu lado e, mesmo assim, eu me sinto sozinha.",
+          "score": 0,
+          "profiles": {
+            "B": 1
+          },
+          "flags": [
+            "loneliness"
+          ]
+        },
+        {
+          "id": "e",
+          "text": "Consigo falar que senti falta dele no dia, sem virar briga. Não resolve tudo, mas aproxima.",
+          "score": 3,
+          "profiles": {}
+        },
+        {
+          "id": "c",
+          "text": "Quase nada. Pego meu celular também e cada um fica no seu canto.",
+          "score": 0,
+          "profiles": {
+            "B": 1
+          },
+          "flags": [
+            "emotional_shutdown"
+          ]
+        },
+        {
+          "id": "d",
+          "text": "Dá vontade de puxar assunto, mas eu já sei como termina. Então deixo quieto.",
+          "score": 2,
+          "profiles": {
+            "B": 2
+          }
+        }
+      ],
+      "position_rationale": "Primeira cena concreta. Depois do contexto, volta ao sentimento com uma imagem que a persona reconhece: a noite, o sofá, o celular. Mede solidão emocional, o sinal de maior peso da Fase 1."
+    },
+    {
+      "id": "Q06",
+      "phase": 1,
+      "phase_name": "Reconhecimento",
+      "kind": "diagnostic",
+      "type": "single",
+      "field": "q06_load",
+      "pillar": "P4",
+      "weight": 1.0,
+      "goal": "Medir a sensação de carregar a casa, os filhos e a relação; distinguir divisão real de carga invisível.",
+      "text": "Pense na última semana. Quem puxou a maior parte do que precisava acontecer: casa, filhos, compromissos, o clima emocional de todo mundo?",
+      "options": [
+        {
+          "id": "b",
+          "text": "Eu, na maior parte. Ele até faz, mas só se eu pedir, lembrar e explicar como.",
+          "score": 1,
+          "profiles": {
+            "A": 2
+          },
+          "flags": [
+            "overload"
+          ]
+        },
+        {
+          "id": "e",
+          "text": "Hoje dividimos de verdade. Custou algumas conversas duras, mas mudou.",
+          "score": 3,
+          "profiles": {}
+        },
+        {
+          "id": "a",
+          "text": "Eu. Se eu não puxar, simplesmente não acontece.",
+          "score": 0,
+          "profiles": {
+            "A": 2
+          },
+          "flags": [
+            "overload"
+          ]
+        },
+        {
+          "id": "c",
+          "text": "O prático a gente divide. A parte invisível, lembrar, prever, resolver antes de virar problema, é minha.",
+          "score": 2,
+          "profiles": {
+            "A": 1
+          }
+        },
+        {
+          "id": "d",
+          "text": "Desisti de pedir. Assumi tudo porque dá menos briga.",
+          "score": 0,
+          "profiles": {
+            "A": 2,
+            "C": 1
+          },
+          "flags": [
+            "overload",
+            "conflict_avoidance"
+          ]
+        }
+      ],
+      "position_rationale": "Fecha a Fase 1 com a sensação de carregar. Vem depois da solidão porque, na vida dela, a sequência é essa: me sinto sozinha e, além disso, faço tudo. Introduz o Perfil A sem nomeá-lo."
+    },
+    {
+      "id": "Q07",
+      "phase": 2,
+      "phase_name": "Repetição",
+      "kind": "diagnostic",
+      "type": "single",
+      "field": "problem_duration",
+      "pillar": null,
+      "weight": null,
+      "commercial_criterion": 1,
+      "goal": "Deslocar de episódio para repetição no tempo. Alimenta o critério comercial 1 (problema ativo há 6 meses ou mais).",
+      "text": "Essa sensação que você descreveu até aqui: há quanto tempo ela está presente, mais ou menos do jeito que está hoje?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Menos de 6 meses. É algo recente.",
+          "value": "<6m",
+          "criterion_met": false
+        },
+        {
+          "id": "b",
+          "text": "Entre 6 meses e 2 anos.",
+          "value": "6m-2y",
+          "criterion_met": true
+        },
+        {
+          "id": "c",
+          "text": "Entre 2 e 5 anos.",
+          "value": "2-5y",
+          "criterion_met": true
+        },
+        {
+          "id": "d",
+          "text": "Mais de 5 anos.",
+          "value": ">5y",
+          "criterion_met": true,
+          "flags": [
+            "repetition_intense"
+          ]
+        },
+        {
+          "id": "e",
+          "text": "Sinceramente, não lembro de ter sido muito diferente.",
+          "value": "always",
+          "criterion_met": true,
+          "flags": [
+            "repetition_intense"
+          ],
+          "profiles": {
+            "C": 1
+          }
+        }
+      ],
+      "position_rationale": "Abre a Fase 2. Depois de reconhecer o sintoma, ela precisa olhar o tempo: isso não é um episódio. A pergunta usa 'essa sensação que você descreveu' para costurar com o que ela acabou de responder. Alimenta o critério comercial 1 sem parecer cadastro."
+    },
+    {
+      "id": "Q08",
+      "phase": 2,
+      "phase_name": "Repetição",
+      "kind": "diagnostic",
+      "type": "multi",
+      "field": "previous_solutions",
+      "derived_fields": [
+        "previous_solutions_count"
+      ],
+      "pillar": null,
+      "weight": null,
+      "commercial_criterion": 2,
+      "goal": "Mostrar que já houve esforço e que a dinâmica voltou ao mesmo lugar. Alimenta o critério comercial 2 (pelo menos duas soluções tentadas).",
+      "text": "O que você já tentou para mudar isso? Marque tudo que se aplica.",
+      "options": [
+        {
+          "id": "a",
+          "text": "Conversas sérias, DRs, ultimatos",
+          "profiles": {
+            "B": 1
+          }
+        },
+        {
+          "id": "b",
+          "text": "Terapia de casal",
+          "knowledge_item": true
+        },
+        {
+          "id": "c",
+          "text": "Terapia individual",
+          "knowledge_item": true
+        },
+        {
+          "id": "d",
+          "text": "Livros, cursos, podcasts, conteúdos sobre relacionamento",
+          "knowledge_item": true
+        },
+        {
+          "id": "e",
+          "text": "Mentoria, constelação, coaching ou outro processo com especialista",
+          "knowledge_item": true
+        },
+        {
+          "id": "f",
+          "text": "Mudar o meu jeito: ceder mais, cobrar menos, engolir, me adaptar",
+          "profiles": {
+            "C": 1,
+            "A": 1
+          }
+        },
+        {
+          "id": "g",
+          "text": "Um tempo separados, ou a ameaça de separação",
+          "profiles": {
+            "B": 1
+          }
+        },
+        {
+          "id": "h",
+          "text": "Nada estruturado ainda. Só fui levando.",
+          "exclusive": true
+        }
+      ],
+      "multi_rules": {
+        "count_excludes": [
+          "h"
+        ],
+        "profile_D_rule": "D += 1 se ao menos 1 knowledge_item; D += 2 (no total) se 2 ou mais knowledge_items",
+        "profile_cap": 2
+      },
+      "position_rationale": "Logo depois do tempo, as tentativas. Juntas, as duas perguntas produzem a percepção central da Fase 2: muito tempo, muito esforço, mesmo lugar. A multi-seleção acelera e valoriza o esforço dela. Alimenta o critério comercial 2."
+    },
+    {
+      "id": "Q09",
+      "phase": 2,
+      "phase_name": "Repetição",
+      "kind": "diagnostic",
+      "type": "single",
+      "field": "q09_conversation_end",
+      "pillar": "P3",
+      "weight": 1.25,
+      "goal": "Revelar a repetição das mesmas discussões e o ciclo cobrança-afastamento em ação. Contém a alternativa de segurança (violência/ameaça).",
+      "text": "Quando você tenta falar sobre o que está faltando entre vocês, como costuma terminar?",
+      "options": [
+        {
+          "id": "b",
+          "text": "Ele concorda com tudo, promete, e em duas semanas está igual.",
+          "score": 1,
+          "profiles": {
+            "B": 1,
+            "A": 1
+          }
+        },
+        {
+          "id": "a",
+          "text": "Ele fica na defensiva ou se fecha, eu insisto, e termina pior do que começou.",
+          "score": 0,
+          "profiles": {
+            "B": 2
+          },
+          "flags": [
+            "demand_withdraw"
+          ]
+        },
+        {
+          "id": "f",
+          "text": "Hoje consigo colocar o que sinto de um jeito que ele escuta. Nem sempre muda, mas a conversa anda.",
+          "score": 3,
+          "profiles": {}
+        },
+        {
+          "id": "d",
+          "text": "Conseguimos conversar com calma às vezes, mas voltamos ao mesmo lugar quando a rotina aperta.",
+          "score": 2,
+          "profiles": {
+            "D": 1
+          }
+        },
+        {
+          "id": "c",
+          "text": "Eu já nem falo. Cansei de ser a chata da casa.",
+          "score": 1,
+          "profiles": {
+            "B": 1,
+            "A": 1
+          },
+          "flags": [
+            "emotional_shutdown"
+          ]
+        },
+        {
+          "id": "e",
+          "text": "Sai do controle: gritos, ameaças, coisas quebradas ou medo de verdade.",
+          "score": 0,
+          "profiles": {},
+          "flags": [
+            "safety_violence"
+          ]
+        }
+      ],
+      "position_rationale": "Fecha a Fase 2 mostrando a repetição em ação: a conversa que sempre termina igual. É aqui que ela sente o padrão, não só o tempo. A posição também foi escolhida por segurança: a alternativa de violência aparece em um contexto natural (como termina a conversa), sem que a pessoa precise se declarar vítima."
+    },
+    {
+      "id": "Q10",
+      "phase": 3,
+      "phase_name": "Custo",
+      "kind": "diagnostic",
+      "type": "single",
+      "field": "q10_cost",
+      "pillar": "P5",
+      "weight": 1.0,
+      "goal": "Fazer a pessoa reconhecer o custo de continuar igual, sem dramatizar, e medir orientação para agir. Contém alternativa de segurança (sofrimento agudo).",
+      "text": "Imagine que daqui a dois anos tudo esteja exatamente como está hoje. O que mais pesa nessa imagem?",
+      "options": [
+        {
+          "id": "c",
+          "text": "Eu continuar esperando ele mudar enquanto a minha vida passa.",
+          "score": 1,
+          "profiles": {
+            "B": 1
+          }
+        },
+        {
+          "id": "a",
+          "text": "Eu me acostumar. Parar de sentir e virar só mais um casal que divide a casa.",
+          "score": 0,
+          "profiles": {
+            "B": 1
+          },
+          "flags": [
+            "resignation"
+          ]
+        },
+        {
+          "id": "e",
+          "text": "Já pesa hoje. Eu não quero esperar dois anos para mexer nisso.",
+          "score": 3,
+          "profiles": {}
+        },
+        {
+          "id": "b",
+          "text": "As pessoas que eu amo aprenderem comigo que relação é isso.",
+          "score": 1,
+          "profiles": {
+            "C": 1
+          }
+        },
+        {
+          "id": "d",
+          "text": "Descobrir tarde demais que havia algo que eu podia ter feito diferente, e eu não vi.",
+          "score": 2,
+          "profiles": {
+            "D": 1
+          }
+        },
+        {
+          "id": "f",
+          "text": "Eu já estou no limite. Tem dias em que sinto que não aguento mais viver assim, e isso me assusta.",
+          "score": 0,
+          "profiles": {},
+          "flags": [
+            "safety_acute_distress"
+          ]
+        }
+      ],
+      "position_rationale": "Única pergunta da Fase 3. Vem depois da repetição porque custo só pesa quando a repetição já foi reconhecida. Projeta dois anos à frente sem catastrofizar. Inclui a alternativa de limite emocional para captar sofrimento agudo em um ponto onde ele emerge naturalmente."
+    },
+    {
+      "id": "Q11",
+      "phase": 4,
+      "phase_name": "O que pode estar por trás",
+      "kind": "diagnostic",
+      "type": "single",
+      "field": "q11_withdraw_reaction",
+      "pillar": "P3",
+      "weight": 1.25,
+      "goal": "Revelar a forma automática de reagir ao afastamento: o coração do ciclo cobrança-afastamento e das adaptações (compensar, fechar-se).",
+      "text": "Quando você sente que ele está se afastando, qual dessas reações mais se parece com você?",
+      "options": [
+        {
+          "id": "c",
+          "text": "Compenso. Cuido mais, resolvo mais, faço mais, esperando que ele volte.",
+          "score": 1,
+          "profiles": {
+            "A": 2,
+            "C": 1
+          }
+        },
+        {
+          "id": "a",
+          "text": "Vou atrás. Pergunto o que houve, cobro, insisto, até que ele responda alguma coisa.",
+          "score": 0,
+          "profiles": {
+            "B": 2
+          },
+          "flags": [
+            "demand_withdraw"
+          ]
+        },
+        {
+          "id": "e",
+          "text": "Percebo o ciclo começando e às vezes consigo não entrar nele. Nem sempre.",
+          "score": 2,
+          "profiles": {
+            "D": 1
+          }
+        },
+        {
+          "id": "b",
+          "text": "Me fecho também. Fico fria e espero ele perceber.",
+          "score": 1,
+          "profiles": {
+            "B": 1,
+            "C": 1
+          }
+        },
+        {
+          "id": "f",
+          "text": "Consigo dizer \"senti você longe\" e perguntar o que está acontecendo com ele, sem virar acusação.",
+          "score": 3,
+          "profiles": {}
+        },
+        {
+          "id": "d",
+          "text": "Fico em silêncio por fora e remoendo por dentro, até explodir por algo pequeno.",
+          "score": 1,
+          "profiles": {
+            "B": 1,
+            "C": 1
+          }
+        }
+      ],
+      "position_rationale": "Abre a Fase 4. Depois do custo, a primeira pergunta sobre ela, mas ainda em cena relacional: o que ela faz quando ele se afasta. É a transição suave de 'ele' para 'a dinâmica'."
+    },
+    {
+      "id": "Q12",
+      "phase": 4,
+      "phase_name": "O que pode estar por trás",
+      "kind": "diagnostic",
+      "type": "single",
+      "field": "q12_family_of_origin",
+      "pillar": "P2",
+      "weight": 1.0,
+      "goal": "Conectar a cena atual com a casa de origem e medir quanto a pessoa já faz essa ligação.",
+      "text": "Pense na casa em que você cresceu. Qual dessas cenas é mais familiar?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Quem cuidava carregava tudo sozinha e reclamava, mas ninguém dividia.",
+          "score": 1,
+          "profiles": {
+            "A": 2,
+            "C": 1
+          }
+        },
+        {
+          "id": "e",
+          "text": "Vejo semelhanças claras com o que vivo hoje. Nomear eu consigo; mudar é outra história.",
+          "score": 2,
+          "profiles": {
+            "D": 2
+          }
+        },
+        {
+          "id": "b",
+          "text": "Problemas ficavam no ar. Conflito era evitado, não resolvido.",
+          "score": 1,
+          "profiles": {
+            "C": 2
+          }
+        },
+        {
+          "id": "f",
+          "text": "Sei bem de onde vêm algumas das minhas reações e já consegui mudar várias delas.",
+          "score": 3,
+          "profiles": {}
+        },
+        {
+          "id": "c",
+          "text": "Eu aprendi cedo a me virar sozinha, a não dar trabalho e a agradar para ser vista.",
+          "score": 1,
+          "profiles": {
+            "C": 2,
+            "A": 1
+          }
+        },
+        {
+          "id": "d",
+          "text": "Nunca tinha pensado na minha infância em relação ao meu casamento.",
+          "score": 0,
+          "profiles": {
+            "C": 1
+          },
+          "flags": [
+            "history_unexamined"
+          ]
+        }
+      ],
+      "position_rationale": "Depois de olhar a reação automática, a pergunta sobre a casa de origem. Posição deliberada: só faz sentido perguntar sobre a infância depois que a pessoa já viu a própria reação (Q11). Antes disso pareceria psicologização gratuita."
+    },
+    {
+      "id": "Q13",
+      "phase": 4,
+      "phase_name": "O que pode estar por trás",
+      "kind": "diagnostic",
+      "type": "single",
+      "field": "q13_pattern_transfer",
+      "pillar": "P2",
+      "weight": 1.0,
+      "goal": "Introduzir, em linguagem simples, a lógica da Síndrome Adaptativa: um jeito de funcionar que foi útil e continua operando em todos os lugares. Medir percepção de transferência do padrão.",
+      "text": "Todo mundo aprende cedo um jeito de funcionar para dar conta da vida: ser forte, agradar, resolver, não incomodar, controlar. Onde o seu aparece hoje?",
+      "options": [
+        {
+          "id": "b",
+          "text": "Aparece em todo lugar: no trabalho, com os filhos, com as amigas. É o meu jeito, mesmo quando me custa.",
+          "score": 1,
+          "profiles": {
+            "C": 1,
+            "A": 1
+          }
+        },
+        {
+          "id": "a",
+          "text": "Não acho que tenha a ver. O que vivo hoje é sobre o meu casamento, não sobre o meu passado.",
+          "score": 0,
+          "profiles": {
+            "B": 1
+          },
+          "flags": [
+            "history_unexamined"
+          ]
+        },
+        {
+          "id": "d",
+          "text": "Aparece menos do que antes. Já consegui fazer diferente em algumas áreas; o casamento é onde está mais difícil.",
+          "score": 3,
+          "profiles": {
+            "D": 1
+          }
+        },
+        {
+          "id": "c",
+          "text": "Aparece, e eu já percebi. Só que na hora da pressão, o automático vence.",
+          "score": 2,
+          "profiles": {
+            "D": 2,
+            "C": 1
+          }
+        },
+        {
+          "id": "e",
+          "text": "Nunca parei para olhar isso dessa forma.",
+          "score": 0,
+          "profiles": {
+            "C": 1
+          },
+          "flags": [
+            "history_unexamined"
+          ]
+        }
+      ],
+      "position_rationale": "Dá nome, em linguagem comum, ao mecanismo da Síndrome Adaptativa e pergunta onde ele aparece hoje. Vem logo após a cena de infância para fechar a ligação história → presente. É a pergunta que faz a pessoa pensar 'talvez eu esteja levando isso para todo lugar'."
+    },
+    {
+      "id": "Q14",
+      "phase": 4,
+      "phase_name": "O que pode estar por trás",
+      "kind": "diagnostic",
+      "type": "single",
+      "field": "q14_blame_responsibility",
+      "pillar": "P4",
+      "weight": 1.25,
+      "goal": "Diferenciar culpa, responsabilidade, o que depende dela e o que pertence ao parceiro. Captura duas frases de baixa aderência.",
+      "text": "Quando a conversa chega em \"de quem é a culpa\", onde você costuma parar?",
+      "options": [
+        {
+          "id": "b",
+          "text": "Em mim. Se eu fosse mais paciente, mais leve, menos cobrança, talvez ele estivesse mais presente.",
+          "score": 0,
+          "profiles": {
+            "C": 2
+          },
+          "flags": [
+            "self_blame"
+          ]
+        },
+        {
+          "id": "c",
+          "text": "Vai e volta. Um dia é ele, no outro sou eu. Nunca se resolve.",
+          "score": 1,
+          "profiles": {
+            "B": 1,
+            "D": 1
+          }
+        },
+        {
+          "id": "a",
+          "text": "Nele. Quem precisa mudar aqui é ele, não eu.",
+          "score": 0,
+          "profiles": {
+            "B": 1
+          },
+          "flags": [
+            "partner_must_change"
+          ]
+        },
+        {
+          "id": "e",
+          "text": "Separo o que é meu do que é dele e atuo no que está ao meu alcance. Dá trabalho, mas me tira do lugar de vítima ou de carrasco.",
+          "score": 3,
+          "profiles": {}
+        },
+        {
+          "id": "d",
+          "text": "Eu me responsabilizo pela minha parte, mas na prática continuo tentando controlar a dele.",
+          "score": 2,
+          "profiles": {
+            "A": 1,
+            "D": 1
+          }
+        },
+        {
+          "id": "f",
+          "text": "Eu só faria alguma coisa diferente se ele mudasse primeiro.",
+          "score": 0,
+          "profiles": {
+            "B": 1
+          },
+          "flags": [
+            "only_if_partner_first"
+          ]
+        }
+      ],
+      "position_rationale": "Fecha a Fase 4 com culpa versus responsabilidade. Precisa vir depois de história e padrão; antes disso a pessoa só tem duas respostas: ele ou eu. Depois de Q12 e Q13 ela já tem uma terceira. Captura duas frases de baixa aderência em um lugar onde elas soam naturais."
+    },
+    {
+      "id": "Q15",
+      "phase": 5,
+      "phase_name": "Possibilidade",
+      "kind": "diagnostic",
+      "type": "single",
+      "field": "q15_knowing_vs_doing",
+      "pillar": "P5",
+      "weight": 1.25,
+      "goal": "Medir a distância entre compreender e conseguir agir, a marca do Perfil D.",
+      "text": "Pense em algo que você já entendeu sobre essa dinâmica, em terapia, num livro, numa conversa. O que acontece com isso na vida real?",
+      "options": [
+        {
+          "id": "b",
+          "text": "Eu uso para explicar o que aconteceu, mas não muda muito o que eu faço.",
+          "score": 1,
+          "profiles": {
+            "D": 2
+          },
+          "flags": [
+            "knows_but_repeats"
+          ]
+        },
+        {
+          "id": "d",
+          "text": "Já mudei algumas reações de forma consistente. Outras ainda escapam.",
+          "score": 3,
+          "profiles": {}
+        },
+        {
+          "id": "a",
+          "text": "Na hora H, some. Eu reajo igual e só depois lembro do que sabia.",
+          "score": 0,
+          "profiles": {
+            "D": 2
+          },
+          "flags": [
+            "knows_but_repeats"
+          ]
+        },
+        {
+          "id": "e",
+          "text": "Sinceramente, eu ainda não entendo o que acontece. Só sei que repete.",
+          "score": 1,
+          "profiles": {
+            "B": 1
+          }
+        },
+        {
+          "id": "c",
+          "text": "Consigo aplicar quando estou bem. Sob pressão, volto ao padrão.",
+          "score": 2,
+          "profiles": {
+            "D": 1
+          }
+        }
+      ],
+      "position_rationale": "Abre a Fase 5. Depois de ver padrão, história e culpa, a pergunta crucial: o que acontece com o que você já sabe? Separa quem precisa de informação de quem precisa de reorganização. Marca do Perfil D e da proposta do Compatíveis."
+    },
+    {
+      "id": "Q16",
+      "phase": 5,
+      "phase_name": "Possibilidade",
+      "kind": "diagnostic",
+      "type": "single",
+      "field": "q16_explanation",
+      "pillar": "P1",
+      "weight": 1.0,
+      "goal": "Depois de toda a sequência, medir para onde a explicação se moveu: do culpado para a dinâmica.",
+      "text": "Depois de tudo que você respondeu até aqui, o que parece explicar melhor por que isso continua se repetindo?",
+      "options": [
+        {
+          "id": "b",
+          "text": "A falta de comunicação. A gente não sabe conversar.",
+          "score": 1,
+          "profiles": {
+            "B": 1
+          }
+        },
+        {
+          "id": "a",
+          "text": "Ele. Se ele fosse diferente, nada disso estaria acontecendo.",
+          "score": 0,
+          "profiles": {
+            "B": 2
+          },
+          "flags": [
+            "external_focus"
+          ]
+        },
+        {
+          "id": "d",
+          "text": "Uma dinâmica entre nós dois que se repete, onde cada um faz a sua parte sem perceber.",
+          "score": 2,
+          "profiles": {
+            "D": 1
+          }
+        },
+        {
+          "id": "c",
+          "text": "Eu. Deve ter alguma coisa errada comigo.",
+          "score": 1,
+          "profiles": {
+            "C": 1
+          },
+          "flags": [
+            "self_blame"
+          ]
+        },
+        {
+          "id": "e",
+          "text": "Uma dinâmica entre nós, alimentada por jeitos de funcionar que eu trouxe de antes e ainda não consegui mudar. Ele tem a parte dele; essa é a minha.",
+          "score": 3,
+          "profiles": {
+            "D": 1
+          }
+        }
+      ],
+      "position_rationale": "Penúltima diagnóstica. Repete o tema da Q01 (o que explica isso) para a própria pessoa perceber se a explicação se moveu. Começa com 'depois de tudo que você respondeu' para legitimar a mudança de resposta."
+    },
+    {
+      "id": "Q17",
+      "phase": 5,
+      "phase_name": "Possibilidade",
+      "kind": "diagnostic",
+      "type": "single",
+      "field": "self_reflection_openness",
+      "pillar": "P4",
+      "weight": 1.0,
+      "commercial_criterion": 4,
+      "goal": "Medir abertura para investigar a própria participação. Alimenta o critério comercial 4 e a flag de baixa aderência.",
+      "text": "Se alguém te mostrasse, com cuidado, uma parte sua que está ajudando a sustentar essa repetição, mesmo sem querer, como você reagiria?",
+      "options": [
+        {
+          "id": "b",
+          "text": "Dependeria de como fosse dito. Mas sim, eu toparia olhar.",
+          "score": 2,
+          "profiles": {},
+          "criterion_met": true,
+          "value": "open_conditional"
+        },
+        {
+          "id": "d",
+          "text": "Não vejo nada que eu possa ou queira investigar em mim nessa história.",
+          "score": 0,
+          "profiles": {
+            "B": 1
+          },
+          "criterion_met": false,
+          "flags": [
+            "nothing_to_investigate"
+          ],
+          "value": "closed"
+        },
+        {
+          "id": "a",
+          "text": "Eu quero ver. Prefiro saber a continuar repetindo.",
+          "score": 3,
+          "profiles": {
+            "D": 1
+          },
+          "criterion_met": true,
+          "value": "open"
+        },
+        {
+          "id": "e",
+          "text": "Eu já sei qual é a minha parte. O que me falta é conseguir fazer diferente.",
+          "score": 2,
+          "profiles": {
+            "D": 2
+          },
+          "criterion_met": true,
+          "value": "knows_part"
+        },
+        {
+          "id": "c",
+          "text": "Acho que eu já olhei demais para mim. Agora é a vez dele.",
+          "score": 1,
+          "profiles": {
+            "B": 1,
+            "A": 1
+          },
+          "criterion_met": false,
+          "value": "his_turn"
+        }
+      ],
+      "position_rationale": "Última diagnóstica e ponte para a Fase 6. Mede abertura para investigar a própria participação, que é ao mesmo tempo diagnóstico (P4), critério comercial 4 e filtro de aderência. Vem depois da Q16 porque só faz sentido perguntar 'toparia olhar?' depois que ela já olhou um pouco."
+    },
+    {
+      "id": "Q18",
+      "phase": 6,
+      "phase_name": "Prontidão",
+      "kind": "commercial",
+      "type": "scale_0_10",
+      "field": "urgency_score",
+      "commercial_criterion": 3,
+      "goal": "Urgência percebida. Critério comercial 3: 7 ou mais.",
+      "text": "De 0 a 10, quão urgente é para você mudar isso agora?",
+      "scale": {
+        "min": 0,
+        "max": 10,
+        "min_label": "Posso conviver com isso",
+        "max_label": "Não dá mais para ficar assim"
+      },
+      "criterion_rule": ">= 7",
+      "position_rationale": "Primeira pergunta de prontidão, com transição explícita na tela. Urgência numérica logo após a reflexão, enquanto o custo ainda está presente, sem pressão."
+    },
+    {
+      "id": "Q19",
+      "phase": 6,
+      "phase_name": "Prontidão",
+      "kind": "commercial",
+      "type": "single",
+      "field": "start_availability",
+      "commercial_criterion": 5,
+      "goal": "Disponibilidade para começar nos próximos 30 dias.",
+      "text": "Se você encontrasse um caminho que fizesse sentido, quando conseguiria começar?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Agora. Nos próximos dias.",
+          "value": "now",
+          "criterion_met": true
+        },
+        {
+          "id": "b",
+          "text": "Dentro das próximas semanas, até 30 dias.",
+          "value": "30d",
+          "criterion_met": true
+        },
+        {
+          "id": "c",
+          "text": "Em 1 a 3 meses.",
+          "value": "1-3m",
+          "criterion_met": false
+        },
+        {
+          "id": "d",
+          "text": "Não sei. Depende de outras coisas antes.",
+          "value": "unsure",
+          "criterion_met": false
+        },
+        {
+          "id": "e",
+          "text": "Não estou procurando começar nada agora. Só queria entender.",
+          "value": "not_looking",
+          "criterion_met": false
+        }
+      ],
+      "position_rationale": "Disponibilidade logo após urgência: o par 'quanto urge / quando consegue' é a leitura mais honesta de momento. A alternativa 'só queria entender' dá uma saída digna para quem não está pronta."
+    },
+    {
+      "id": "Q20",
+      "phase": 6,
+      "phase_name": "Prontidão",
+      "kind": "commercial",
+      "type": "single",
+      "field": "investment_capacity",
+      "commercial_criterion": 6,
+      "goal": "Capacidade aproximada de investir cerca de R$ 7.500, sem pedir renda.",
+      "text": "Um processo individual sério, com acompanhamento, costuma ficar na faixa de R$ 7.500. Como isso se encaixa na sua realidade hoje?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Cabe. Se fizer sentido, eu decido.",
+          "value": "fits",
+          "criterion_met": true
+        },
+        {
+          "id": "b",
+          "text": "Cabe com planejamento ou parcelamento.",
+          "value": "fits_with_planning",
+          "criterion_met": true
+        },
+        {
+          "id": "c",
+          "text": "Cabe, mas eu precisaria envolver meu marido na decisão.",
+          "value": "fits_shared_decision",
+          "criterion_met": true,
+          "flags": [
+            "decision_shared"
+          ]
+        },
+        {
+          "id": "d",
+          "text": "Hoje não cabe.",
+          "value": "does_not_fit",
+          "criterion_met": false
+        },
+        {
+          "id": "e",
+          "text": "Prefiro não responder.",
+          "value": "no_answer",
+          "criterion_met": false
+        }
+      ],
+      "position_rationale": "Investimento vem depois de urgência e disponibilidade, nunca antes. Mostra a faixa de valor abertamente para que a conversa no WhatsApp não comece com surpresa. A alternativa de decisão compartilhada evita falso negativo com a persona."
+    },
+    {
+      "id": "Q21",
+      "phase": 6,
+      "phase_name": "Prontidão",
+      "kind": "commercial",
+      "type": "single",
+      "field": "action_intent",
+      "commercial_criterion": 7,
+      "goal": "Separar quem quer agir e construir de quem quer apenas validação, garantia ou que o parceiro seja consertado. Captura duas frases de baixa aderência.",
+      "text": "Para fechar: o que você realmente está buscando agora?",
+      "options": [
+        {
+          "id": "c",
+          "text": "Confirmar que eu não estou louca. Que o problema existe.",
+          "value": "validation",
+          "criterion_met": false
+        },
+        {
+          "id": "a",
+          "text": "Entender o que está por trás disso e agir sobre a minha parte, mesmo que dê trabalho.",
+          "value": "act",
+          "criterion_met": true,
+          "profiles": {
+            "D": 1
+          }
+        },
+        {
+          "id": "d",
+          "text": "Alguém que faça o meu marido mudar.",
+          "value": "fix_partner",
+          "criterion_met": false,
+          "flags": [
+            "wants_partner_fixed"
+          ]
+        },
+        {
+          "id": "f",
+          "text": "Decidir se eu fico ou se eu vou.",
+          "value": "decide",
+          "criterion_met": true,
+          "flags": [
+            "decision_stay_or_leave"
+          ]
+        },
+        {
+          "id": "b",
+          "text": "Entender melhor. Ainda não sei se quero mexer em alguma coisa.",
+          "value": "understand_only",
+          "criterion_met": false
+        },
+        {
+          "id": "e",
+          "text": "Só me interessa se tiver garantia de salvar o meu casamento.",
+          "value": "guarantee",
+          "criterion_met": false,
+          "flags": [
+            "guarantee_required"
+          ]
+        }
+      ],
+      "position_rationale": "Encerra com intenção. É a última porque é a mais honesta quando a pessoa já passou por todo o percurso: ela sabe o que quer agora. Captura as últimas frases de baixa aderência sem julgamento."
+    }
+  ]
+}
