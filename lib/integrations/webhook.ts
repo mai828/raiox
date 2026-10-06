@@ -2,6 +2,8 @@ import type { CRMLeadPayload } from "@/types";
 
 /** Envia o payload para a rota interna, que repassa ao webhook configurado. Nunca lança. */
 export async function sendLeadPayload(payload: CRMLeadPayload): Promise<{ ok: boolean; delivered: boolean }> {
+  // Versão estática de teste (artefato): não há rota de API.
+  if (process.env.NEXT_PUBLIC_DISABLE_WEBHOOK === "1") return { ok: true, delivered: false };
   try {
     const res = await fetch("/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload), keepalive: true });
     if (!res.ok) return { ok: false, delivered: false };
