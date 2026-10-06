@@ -40,3 +40,21 @@ Para alterar uma pergunta, score, peso ou afinidade: edite `data/quiz.json`, rod
 - **Prontidão comercial** separada (0 a 7); pelo menos 4 para conversa.
 - **Flags** de baixa aderência e segurança mudam a rota, não o índice.
 - **CTA**: "Quero entender o que está por trás disso." → WhatsApp → triagem → conversa de aplicação → Compatíveis.
+
+## Versão web funcional
+
+A pasta `web/` contém o quiz pronto para uso, com as 21 perguntas, telas de transição, captura, cálculo e tela de resultado, usando `data/quiz.json` como fonte.
+
+| Arquivo | Uso |
+|---|---|
+| `web/index.html` | Abra direto no navegador (duplo clique) ou hospede em qualquer servidor estático. Arquivo único, sem dependências além das fontes do Google. |
+| `web/artifact.html` | Mesma página sem o esqueleto HTML, para publicação como artefato. |
+| `web/src/` | Fontes: `app.js` (motor de scoring portado de `scripts/score.py` + interface), `copy.js` (textos do resultado), `styles.css`, `page.html`. |
+| `scripts/build_web.py` | Regenera as duas versões a partir de `web/src/` e `data/quiz.json`. |
+
+Antes de publicar para o público:
+1. Em `web/src/app.js`, troque `CONFIG.whatsappNumber` pelo número da equipe (55 + DDD + número) e rode `python3 scripts/build_web.py`.
+2. Remova ou esconda o bloco "Dados gerados para o CRM" no fim do resultado (ele existe para validar a integração).
+3. Ligue o envio dos dados: a função `track()` já empurra eventos para `window.dataLayer` (GTM); o objeto `payload` no resultado é o que deve ir para o CRM via webhook.
+
+Verificação: o motor em JavaScript foi comparado ao Python nos oito cenários de `scripts/score.py` (pilares, IRC, perfil, ponto de atenção, leitura, prontidão, rota, flags e tags), com resultado idêntico.

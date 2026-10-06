@@ -1,0 +1,559 @@
+<title>Raio-X do Seu Relacionamento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: uma tela por vez, coluna única centrada (máx. 640px), cabeçalho fixo com fase e progresso. */
+:root {
+  --bg: #f4f2f6;
+  --surface: #ffffff;
+  --surface-2: #ebe6ee;
+  --fg: #241b2b;
+  --muted: #6b6072;
+  --line: #ddd6e1;
+  --accent: #7a3e5d;
+  --accent-ink: #ffffff;
+  --accent-soft: #f1e3ea;
+  --ok: #3f7d5b;
+  --warn: #b9772b;
+  --danger: #a33b3b;
+  --danger-soft: #f6e3e3;
+  --font-display: "Literata", "Iowan Old Style", Georgia, serif;
+  --font-body: "Public Sans", "Helvetica Neue", Arial, sans-serif;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(36, 27, 43, .06), 0 8px 24px rgba(36, 27, 43, .06);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17121b; --surface: #221a27; --surface-2: #2c2232; --fg: #f1ebf3; --muted: #a99eb0;
+    --line: #3a3040; --accent: #d08aa8; --accent-ink: #1d1420; --accent-soft: #3a2633;
+    --ok: #7fc39d; --warn: #e0a65c; --danger: #e08585; --danger-soft: #3d2426;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17121b; --surface: #221a27; --surface-2: #2c2232; --fg: #f1ebf3; --muted: #a99eb0;
+  --line: #3a3040; --accent: #d08aa8; --accent-ink: #1d1420; --accent-soft: #3a2633;
+  --ok: #7fc39d; --warn: #e0a65c; --danger: #e08585; --danger-soft: #3d2426;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.3);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 17px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 500; line-height: 1.2; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.wrap { max-width: 640px; margin: 0 auto; padding-inline: 20px; padding-block: 24px 64px; }
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.topbar .in { max-width: 640px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 12px; }
+.brand { font-family: var(--font-display); font-size: 15px; letter-spacing: .01em; color: var(--muted); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.phase { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); white-space: nowrap; }
+.progress { height: 3px; background: var(--line); }
+.progress > i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .3s ease; }
+.eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); font-weight: 600; }
+.screen { display: grid; gap: 20px; animation: rise .35s ease both; }
+@keyframes rise { from { transform: translateY(8px); } to { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .screen { animation: none; } .progress > i { transition: none; } }
+.cover h1 { font-size: clamp(34px, 7vw, 48px); }
+.cover .sub { font-size: 20px; font-family: var(--font-display); font-style: italic; color: var(--fg); }
+.lede { color: var(--muted); font-size: 16px; }
+.qtext { font-size: clamp(21px, 4.5vw, 26px); font-family: var(--font-display); }
+.options { display: grid; gap: 10px; }
+.opt {
+  text-align: left; width: 100%; padding: 14px 16px; border-radius: var(--radius);
+  border: 1px solid var(--line); background: var(--surface); cursor: pointer; line-height: 1.4;
+  display: flex; gap: 12px; align-items: flex-start; transition: border-color .15s, background .15s;
+}
+.opt:hover { border-color: var(--accent); }
+.opt:focus-visible, .btn:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.opt .mark { flex: 0 0 20px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line); margin-top: 2px; position: relative; }
+.opt.multi .mark { border-radius: 5px; }
+.opt[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.opt[aria-pressed="true"] .mark { border-color: var(--accent); background: var(--accent); }
+.opt[aria-pressed="true"] .mark::after { content: ""; position: absolute; inset: 4px; border-radius: inherit; background: var(--accent-ink); }
+.scale { display: grid; grid-template-columns: repeat(11, 1fr); gap: 6px; }
+.scale .opt { padding: 12px 0; justify-content: center; font-variant-numeric: tabular-nums; }
+.scale .opt .mark { display: none; }
+.scale-labels { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); gap: 12px; }
+.row { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.btn {
+  padding: 14px 22px; border-radius: 999px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+  font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn.ghost { background: transparent; color: var(--fg); border-color: var(--line); font-weight: 500; }
+.btn.block { width: 100%; }
+.note { font-size: 14px; color: var(--muted); }
+.field { display: grid; gap: 6px; }
+.field label { font-size: 14px; font-weight: 600; }
+.field input[type="text"], .field input[type="tel"], .field input[type="email"] {
+  font: inherit; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); width: 100%;
+}
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; }
+.check input { margin-top: 4px; width: 18px; height: 18px; flex: 0 0 18px; }
+.err { color: var(--danger); font-size: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; display: grid; gap: 12px; }
+.card.accent { border-color: transparent; background: var(--accent-soft); }
+.card.danger { background: var(--danger-soft); border-color: var(--danger); }
+.card h2 { font-size: 24px; }
+.card h3 { font-size: 19px; }
+.card p + p { margin-top: 0; }
+.big { font-family: var(--font-display); font-size: 56px; line-height: 1; font-variant-numeric: tabular-nums; }
+.big small { font-size: 20px; color: var(--muted); }
+.bandname { font-size: 22px; font-family: var(--font-display); font-style: italic; }
+.pillars { display: grid; gap: 14px; }
+.pillar { display: grid; gap: 6px; }
+.pillar .head { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; }
+.pillar .head b { font-weight: 600; }
+.pillar .head span { font-variant-numeric: tabular-nums; color: var(--muted); }
+.bar { height: 8px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
+.pillar .read { font-size: 14px; color: var(--muted); }
+.hl { display: grid; gap: 10px; }
+.hl div { display: grid; gap: 2px; font-size: 15px; padding-left: 12px; border-left: 3px solid var(--line); }
+.hl div.rep { border-color: var(--danger); }
+.hl div.aw { border-color: var(--ok); }
+.hl div.pos { border-color: var(--warn); }
+.hl b { font-weight: 600; }
+.hl span { color: var(--muted); font-size: 14px; }
+.quote { font-family: var(--font-display); font-size: 20px; font-style: italic; }
+.chip { display: inline-block; padding: 3px 10px; border-radius: 999px; background: var(--surface-2); font-size: 12px; letter-spacing: .04em; text-transform: uppercase; }
+details { border-top: 1px solid var(--line); padding-top: 12px; }
+summary { cursor: pointer; font-size: 14px; color: var(--muted); }
+pre { font-size: 12px; overflow-x: auto; background: var(--surface-2); padding: 12px; border-radius: 10px; margin: 8px 0 0; }
+.foot { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+.linkish { background: none; border: 0; color: var(--muted); text-decoration: underline; cursor: pointer; padding: 0; font-size: 14px; }
+.contacts { display: grid; gap: 6px; font-size: 15px; }
+.contacts b { font-variant-numeric: tabular-nums; }
+
+</style>
+<header class="topbar">
+  <div class="in"><span class="brand">Raio-X do Seu Relacionamento</span><span class="phase" id="phase"></span></div>
+  <div class="progress" id="progress"><i></i></div>
+</header>
+<main class="wrap"><div id="app"></div></main>
+<script>
+const QUIZ = {"meta": {"name": "RAIO-X DO SEU RELACIONAMENTO", "subtitle": "Descubra o que pode estar mantendo seu relacionamento no mesmo lugar, mesmo depois de tudo que você já tentou.", "brand": "Márcio Conceição", "product": "Compatíveis", "version": "1.0.0", "score_scale": "0-3 por alternativa diagnóstica; 0 = padrão muito comprometido, 3 = maior consciência/capacidade de reorganização", "pillars": {"P1": {"key": "clarity", "name": "Clareza sobre o problema e consciência do padrão", "field": "pillar_clarity_score", "tag": "ATTENTION_CLARITY"}, "P2": {"key": "history", "name": "História, família de origem e mochila emocional", "field": "pillar_history_score", "tag": "ATTENTION_HISTORY"}, "P3": {"key": "relationship", "name": "Dinâmica relacional, presença e conexão", "field": "pillar_relationship_score", "tag": "ATTENTION_RELATIONSHIP"}, "P4": {"key": "boundaries", "name": "Responsabilidade, limites e papéis", "field": "pillar_boundaries_score", "tag": "ATTENTION_BOUNDARIES"}, "P5": {"key": "action", "name": "Reorganização, decisão e capacidade de agir", "field": "pillar_action_score", "tag": "ATTENTION_ACTION"}}, "pillar_impact_order": ["P3", "P4", "P5", "P1", "P2"], "profiles": {"A": {"key": "profile_overload", "name": "A Sobrecarregada", "tag": "PROFILE_OVERLOADED"}, "B": {"key": "profile_demand_withdraw", "name": "Presa no ciclo cobrança-afastamento", "tag": "PROFILE_DEMAND_WITHDRAW"}, "C": {"key": "profile_emotional_baggage", "name": "Repetindo a mochila emocional", "tag": "PROFILE_EMOTIONAL_BAGGAGE"}, "D": {"key": "profile_knows_but_repeats", "name": "A que já entendeu, mas continua repetindo", "tag": "PROFILE_KNOWS_BUT_REPEATS"}}, "attention_to_profile_fallback": {"P1": "B", "P2": "C", "P3": "B", "P4": "A", "P5": "D"}, "risk_flags": {"external_focus": {"pillar": "P1", "label": "Foco exclusivo no parceiro como causa"}, "history_unexamined": {"pillar": "P2", "label": "História nunca conectada ao presente"}, "loneliness": {"pillar": "P3", "label": "Solidão emocional dentro da relação"}, "emotional_shutdown": {"pillar": "P3", "label": "Desligamento afetivo / desistiu de falar"}, "demand_withdraw": {"pillar": "P3", "label": "Ciclo cobrança-afastamento ativo"}, "repetition_intense": {"pillar": null, "label": "Repetição há mais de 5 anos ou desde sempre"}, "overload": {"pillar": "P4", "label": "Carrega praticamente tudo sozinha"}, "conflict_avoidance": {"pillar": "P4", "label": "Assume tudo para evitar conflito"}, "self_blame": {"pillar": "P4", "label": "Assume toda a culpa"}, "partner_must_change": {"pillar": "P4", "label": "Só o parceiro precisa mudar", "low_adherence": true}, "only_if_partner_first": {"pillar": "P4", "label": "Só agiria se ele mudasse primeiro", "low_adherence": true}, "nothing_to_investigate": {"pillar": "P4", "label": "Nada a investigar em si", "low_adherence": true}, "resignation": {"pillar": "P5", "label": "Resignação / acostumar-se"}, "knows_but_repeats": {"pillar": "P5", "label": "Compreende mas reage igual"}, "wants_partner_fixed": {"pillar": null, "label": "Quer alguém que faça o parceiro mudar", "low_adherence": true}, "guarantee_required": {"pillar": null, "label": "Só com garantia de salvar o casamento", "low_adherence": true}, "decision_shared": {"pillar": null, "label": "Decisão de investimento compartilhada"}, "decision_stay_or_leave": {"pillar": null, "label": "Busca decidir se fica ou vai"}, "safety_violence": {"pillar": null, "label": "Violência, ameaça ou medo", "safety": true}, "safety_acute_distress": {"pillar": null, "label": "Sofrimento agudo / limite", "safety": true}}, "irc_bands": [{"min": 0, "max": 24, "key": "automatic", "name": "No automático"}, {"min": 25, "max": 49, "key": "emerging", "name": "Começando a enxergar"}, {"min": 50, "max": 74, "key": "aware_but_repeating", "name": "Enxergando, mas ainda repetindo"}, {"min": 75, "max": 100, "key": "hands_on_wheel", "name": "Com a mão no volante"}], "commercial_bands": [{"min": 0, "max": 2, "key": "low", "name": "Baixa prontidão", "tag": "READINESS_LOW"}, {"min": 3, "max": 3, "key": "medium", "name": "Prontidão intermediária", "tag": "READINESS_MEDIUM"}, {"min": 4, "max": 5, "key": "qualified", "name": "Lead qualificada", "tag": "READINESS_QUALIFIED"}, {"min": 6, "max": 7, "key": "high", "name": "Alta prioridade comercial", "tag": "READINESS_HIGH"}], "lead_routes": {"safety": "Orientação de segurança separada. Sem CTA comercial, sem automação de vendas. Revisão humana.", "nurture_low_adherence": "Resultado completo + conteúdos de reposicionamento (participação própria). Sem sequência comercial automática.", "sales_triage": "Resultado → WhatsApp → triagem → conversa de aplicação → oferta Compatíveis.", "nurture": "Resultado → conteúdos de nutrição → nova chamada para conversa."}}, "questions": [{"id": "Q01", "phase": 1, "phase_name": "Reconhecimento", "kind": "diagnostic", "type": "single", "field": "q01_symptom", "pillar": "P1", "weight": 1.0, "goal": "Gerar identificação imediata com a queixa aparente e medir onde a pessoa localiza o problema hoje.", "text": "Quando você pensa no seu relacionamento hoje, qual dessas frases mais parece com o que passa pela sua cabeça?", "options": [{"id": "c", "text": "Eu faço tudo sozinha. A casa, os filhos, a relação, tudo passa por mim.", "score": 1, "profiles": {"A": 2}}, {"id": "a", "text": "Ele não muda. Já falei de todas as formas e nada.", "score": 0, "profiles": {"B": 2}, "flags": ["external_focus"]}, {"id": "d", "text": "A gente mora junto, mas não se encontra mais. Ele está ali e eu me sinto sozinha.", "score": 1, "profiles": {"B": 1}, "flags": ["loneliness"]}, {"id": "b", "text": "Eu sei explicar direitinho o que acontece entre a gente. Só não consigo fazer diferente na hora.", "score": 2, "profiles": {"D": 2}}, {"id": "e", "text": "Talvez o problema seja eu. Talvez eu esteja exigindo demais, ou do jeito errado.", "score": 1, "profiles": {"C": 1, "D": 1}, "flags": ["self_blame"]}], "position_rationale": "Primeira pergunta porque a pessoa precisa se ver na tela em cinco segundos. As alternativas são as frases que ela já diz para si mesma; isso dá permissão para continuar e, sem ela perceber, já registra onde ela localiza o problema hoje: nele, em si ou na dinâmica."}, {"id": "Q02", "phase": 1, "phase_name": "Contexto", "kind": "context", "type": "single", "field": "relationship_context", "derived_fields": ["relationship_status", "relationship_years"], "goal": "Situar a leitura: estado civil e tempo de relação em um único clique.", "text": "Como está a sua situação hoje?", "options": [{"id": "a", "text": "Casada ou morando junto há menos de 5 anos", "derive": {"relationship_status": "married_or_cohabiting", "relationship_years": "<5"}}, {"id": "b", "text": "Casada ou morando junto há 5 a 10 anos", "derive": {"relationship_status": "married_or_cohabiting", "relationship_years": "5-10"}}, {"id": "c", "text": "Casada ou morando junto há 11 a 20 anos", "derive": {"relationship_status": "married_or_cohabiting", "relationship_years": "11-20"}}, {"id": "d", "text": "Casada ou morando junto há mais de 20 anos", "derive": {"relationship_status": "married_or_cohabiting", "relationship_years": ">20"}}, {"id": "e", "text": "Namorando ou noiva, sem morar junto", "derive": {"relationship_status": "dating", "relationship_years": "n/a"}}, {"id": "f", "text": "Separada ou em processo de separação, mas ainda envolvida nessa história", "derive": {"relationship_status": "separating", "relationship_years": "n/a"}}], "position_rationale": "Três cliques rápidos logo depois do reconhecimento inicial, antes de aprofundar: coletam contexto com atrito mínimo e dão ritmo. Ficam aqui, e não na abertura, para que a primeira tela seja emocional, não cadastral."}, {"id": "Q03", "phase": 1, "phase_name": "Contexto", "kind": "context", "type": "single", "field": "has_children", "goal": "Contexto de carga e de transmissão de padrões para os filhos.", "text": "Vocês têm filhos?", "options": [{"id": "a", "text": "Sim, crianças ou adolescentes em casa", "value": "yes_home"}, {"id": "b", "text": "Sim, já crescidos ou morando fora", "value": "yes_adult"}, {"id": "c", "text": "Não", "value": "no"}], "position_rationale": "Segue a Q02 no bloco de contexto. Filhos mudam a leitura de carga (Perfil A) e de custo (transmissão de padrões). Também permite esconder a referência a filhos em telas posteriores quando a resposta é 'Não'."}, {"id": "Q04", "phase": 1, "phase_name": "Contexto", "kind": "context", "type": "single", "field": "age_range", "goal": "Aderência à persona principal (35 a 52).", "text": "Qual é a sua faixa etária?", "options": [{"id": "a", "text": "Até 34", "value": "<=34"}, {"id": "b", "text": "35 a 44", "value": "35-44"}, {"id": "c", "text": "45 a 52", "value": "45-52"}, {"id": "d", "text": "53 ou mais", "value": ">=53"}], "position_rationale": "Fecha o bloco de contexto. A idade entra por último entre as três porque é a menos emocional; depois dela o quiz volta imediatamente para uma cena concreta."}, {"id": "Q05", "phase": 1, "phase_name": "Reconhecimento", "kind": "diagnostic", "type": "single", "field": "q05_loneliness", "pillar": "P3", "weight": 1.25, "goal": "Medir solidão emocional e presença. Cena concreta para a pessoa se reconhecer antes de interpretar.", "text": "Fim de noite. A casa finalmente silencia e ele está ali, no sofá ou no celular. O que costuma acontecer dentro de você nesse momento?", "options": [{"id": "b", "text": "Irritação. Olho para ele descansando e penso em tudo que ficou nas minhas costas naquele dia.", "score": 1, "profiles": {"A": 2}}, {"id": "a", "text": "Uma solidão difícil de explicar. Ele está do meu lado e, mesmo assim, eu me sinto sozinha.", "score": 0, "profiles": {"B": 1}, "flags": ["loneliness"]}, {"id": "e", "text": "Consigo falar que senti falta dele no dia, sem virar briga. Não resolve tudo, mas aproxima.", "score": 3, "profiles": {}}, {"id": "c", "text": "Quase nada. Pego meu celular também e cada um fica no seu canto.", "score": 0, "profiles": {"B": 1}, "flags": ["emotional_shutdown"]}, {"id": "d", "text": "Dá vontade de puxar assunto, mas eu já sei como termina. Então deixo quieto.", "score": 2, "profiles": {"B": 2}}], "position_rationale": "Primeira cena concreta. Depois do contexto, volta ao sentimento com uma imagem que a persona reconhece: a noite, o sofá, o celular. Mede solidão emocional, o sinal de maior peso da Fase 1."}, {"id": "Q06", "phase": 1, "phase_name": "Reconhecimento", "kind": "diagnostic", "type": "single", "field": "q06_load", "pillar": "P4", "weight": 1.0, "goal": "Medir a sensação de carregar a casa, os filhos e a relação; distinguir divisão real de carga invisível.", "text": "Pense na última semana. Quem puxou a maior parte do que precisava acontecer: casa, filhos, compromissos, o clima emocional de todo mundo?", "options": [{"id": "b", "text": "Eu, na maior parte. Ele até faz, mas só se eu pedir, lembrar e explicar como.", "score": 1, "profiles": {"A": 2}, "flags": ["overload"]}, {"id": "e", "text": "Hoje dividimos de verdade. Custou algumas conversas duras, mas mudou.", "score": 3, "profiles": {}}, {"id": "a", "text": "Eu. Se eu não puxar, simplesmente não acontece.", "score": 0, "profiles": {"A": 2}, "flags": ["overload"]}, {"id": "c", "text": "O prático a gente divide. A parte invisível, lembrar, prever, resolver antes de virar problema, é minha.", "score": 2, "profiles": {"A": 1}}, {"id": "d", "text": "Desisti de pedir. Assumi tudo porque dá menos briga.", "score": 0, "profiles": {"A": 2, "C": 1}, "flags": ["overload", "conflict_avoidance"]}], "position_rationale": "Fecha a Fase 1 com a sensação de carregar. Vem depois da solidão porque, na vida dela, a sequência é essa: me sinto sozinha e, além disso, faço tudo. Introduz o Perfil A sem nomeá-lo."}, {"id": "Q07", "phase": 2, "phase_name": "Repetição", "kind": "diagnostic", "type": "single", "field": "problem_duration", "pillar": null, "weight": null, "commercial_criterion": 1, "goal": "Deslocar de episódio para repetição no tempo. Alimenta o critério comercial 1 (problema ativo há 6 meses ou mais).", "text": "Essa sensação que você descreveu até aqui: há quanto tempo ela está presente, mais ou menos do jeito que está hoje?", "options": [{"id": "a", "text": "Menos de 6 meses. É algo recente.", "value": "<6m", "criterion_met": false}, {"id": "b", "text": "Entre 6 meses e 2 anos.", "value": "6m-2y", "criterion_met": true}, {"id": "c", "text": "Entre 2 e 5 anos.", "value": "2-5y", "criterion_met": true}, {"id": "d", "text": "Mais de 5 anos.", "value": ">5y", "criterion_met": true, "flags": ["repetition_intense"]}, {"id": "e", "text": "Sinceramente, não lembro de ter sido muito diferente.", "value": "always", "criterion_met": true, "flags": ["repetition_intense"], "profiles": {"C": 1}}], "position_rationale": "Abre a Fase 2. Depois de reconhecer o sintoma, ela precisa olhar o tempo: isso não é um episódio. A pergunta usa 'essa sensação que você descreveu' para costurar com o que ela acabou de responder. Alimenta o critério comercial 1 sem parecer cadastro."}, {"id": "Q08", "phase": 2, "phase_name": "Repetição", "kind": "diagnostic", "type": "multi", "field": "previous_solutions", "derived_fields": ["previous_solutions_count"], "pillar": null, "weight": null, "commercial_criterion": 2, "goal": "Mostrar que já houve esforço e que a dinâmica voltou ao mesmo lugar. Alimenta o critério comercial 2 (pelo menos duas soluções tentadas).", "text": "O que você já tentou para mudar isso? Marque tudo que se aplica.", "options": [{"id": "a", "text": "Conversas sérias, DRs, ultimatos", "profiles": {"B": 1}}, {"id": "b", "text": "Terapia de casal", "knowledge_item": true}, {"id": "c", "text": "Terapia individual", "knowledge_item": true}, {"id": "d", "text": "Livros, cursos, podcasts, conteúdos sobre relacionamento", "knowledge_item": true}, {"id": "e", "text": "Mentoria, constelação, coaching ou outro processo com especialista", "knowledge_item": true}, {"id": "f", "text": "Mudar o meu jeito: ceder mais, cobrar menos, engolir, me adaptar", "profiles": {"C": 1, "A": 1}}, {"id": "g", "text": "Um tempo separados, ou a ameaça de separação", "profiles": {"B": 1}}, {"id": "h", "text": "Nada estruturado ainda. Só fui levando.", "exclusive": true}], "multi_rules": {"count_excludes": ["h"], "profile_D_rule": "D += 1 se ao menos 1 knowledge_item; D += 2 (no total) se 2 ou mais knowledge_items", "profile_cap": 2}, "position_rationale": "Logo depois do tempo, as tentativas. Juntas, as duas perguntas produzem a percepção central da Fase 2: muito tempo, muito esforço, mesmo lugar. A multi-seleção acelera e valoriza o esforço dela. Alimenta o critério comercial 2."}, {"id": "Q09", "phase": 2, "phase_name": "Repetição", "kind": "diagnostic", "type": "single", "field": "q09_conversation_end", "pillar": "P3", "weight": 1.25, "goal": "Revelar a repetição das mesmas discussões e o ciclo cobrança-afastamento em ação. Contém a alternativa de segurança (violência/ameaça).", "text": "Quando você tenta falar sobre o que está faltando entre vocês, como costuma terminar?", "options": [{"id": "b", "text": "Ele concorda com tudo, promete, e em duas semanas está igual.", "score": 1, "profiles": {"B": 1, "A": 1}}, {"id": "a", "text": "Ele fica na defensiva ou se fecha, eu insisto, e termina pior do que começou.", "score": 0, "profiles": {"B": 2}, "flags": ["demand_withdraw"]}, {"id": "f", "text": "Hoje consigo colocar o que sinto de um jeito que ele escuta. Nem sempre muda, mas a conversa anda.", "score": 3, "profiles": {}}, {"id": "d", "text": "Conseguimos conversar com calma às vezes, mas voltamos ao mesmo lugar quando a rotina aperta.", "score": 2, "profiles": {"D": 1}}, {"id": "c", "text": "Eu já nem falo. Cansei de ser a chata da casa.", "score": 1, "profiles": {"B": 1, "A": 1}, "flags": ["emotional_shutdown"]}, {"id": "e", "text": "Sai do controle: gritos, ameaças, coisas quebradas ou medo de verdade.", "score": 0, "profiles": {}, "flags": ["safety_violence"]}], "position_rationale": "Fecha a Fase 2 mostrando a repetição em ação: a conversa que sempre termina igual. É aqui que ela sente o padrão, não só o tempo. A posição também foi escolhida por segurança: a alternativa de violência aparece em um contexto natural (como termina a conversa), sem que a pessoa precise se declarar vítima."}, {"id": "Q10", "phase": 3, "phase_name": "Custo", "kind": "diagnostic", "type": "single", "field": "q10_cost", "pillar": "P5", "weight": 1.0, "goal": "Fazer a pessoa reconhecer o custo de continuar igual, sem dramatizar, e medir orientação para agir. Contém alternativa de segurança (sofrimento agudo).", "text": "Imagine que daqui a dois anos tudo esteja exatamente como está hoje. O que mais pesa nessa imagem?", "options": [{"id": "c", "text": "Eu continuar esperando ele mudar enquanto a minha vida passa.", "score": 1, "profiles": {"B": 1}}, {"id": "a", "text": "Eu me acostumar. Parar de sentir e virar só mais um casal que divide a casa.", "score": 0, "profiles": {"B": 1}, "flags": ["resignation"]}, {"id": "e", "text": "Já pesa hoje. Eu não quero esperar dois anos para mexer nisso.", "score": 3, "profiles": {}}, {"id": "b", "text": "As pessoas que eu amo aprenderem comigo que relação é isso.", "score": 1, "profiles": {"C": 1}}, {"id": "d", "text": "Descobrir tarde demais que havia algo que eu podia ter feito diferente, e eu não vi.", "score": 2, "profiles": {"D": 1}}, {"id": "f", "text": "Eu já estou no limite. Tem dias em que sinto que não aguento mais viver assim, e isso me assusta.", "score": 0, "profiles": {}, "flags": ["safety_acute_distress"]}], "position_rationale": "Única pergunta da Fase 3. Vem depois da repetição porque custo só pesa quando a repetição já foi reconhecida. Projeta dois anos à frente sem catastrofizar. Inclui a alternativa de limite emocional para captar sofrimento agudo em um ponto onde ele emerge naturalmente."}, {"id": "Q11", "phase": 4, "phase_name": "O que pode estar por trás", "kind": "diagnostic", "type": "single", "field": "q11_withdraw_reaction", "pillar": "P3", "weight": 1.25, "goal": "Revelar a forma automática de reagir ao afastamento: o coração do ciclo cobrança-afastamento e das adaptações (compensar, fechar-se).", "text": "Quando você sente que ele está se afastando, qual dessas reações mais se parece com você?", "options": [{"id": "c", "text": "Compenso. Cuido mais, resolvo mais, faço mais, esperando que ele volte.", "score": 1, "profiles": {"A": 2, "C": 1}}, {"id": "a", "text": "Vou atrás. Pergunto o que houve, cobro, insisto, até que ele responda alguma coisa.", "score": 0, "profiles": {"B": 2}, "flags": ["demand_withdraw"]}, {"id": "e", "text": "Percebo o ciclo começando e às vezes consigo não entrar nele. Nem sempre.", "score": 2, "profiles": {"D": 1}}, {"id": "b", "text": "Me fecho também. Fico fria e espero ele perceber.", "score": 1, "profiles": {"B": 1, "C": 1}}, {"id": "f", "text": "Consigo dizer \"senti você longe\" e perguntar o que está acontecendo com ele, sem virar acusação.", "score": 3, "profiles": {}}, {"id": "d", "text": "Fico em silêncio por fora e remoendo por dentro, até explodir por algo pequeno.", "score": 1, "profiles": {"B": 1, "C": 1}}], "position_rationale": "Abre a Fase 4. Depois do custo, a primeira pergunta sobre ela, mas ainda em cena relacional: o que ela faz quando ele se afasta. É a transição suave de 'ele' para 'a dinâmica'."}, {"id": "Q12", "phase": 4, "phase_name": "O que pode estar por trás", "kind": "diagnostic", "type": "single", "field": "q12_family_of_origin", "pillar": "P2", "weight": 1.0, "goal": "Conectar a cena atual com a casa de origem e medir quanto a pessoa já faz essa ligação.", "text": "Pense na casa em que você cresceu. Qual dessas cenas é mais familiar?", "options": [{"id": "a", "text": "Quem cuidava carregava tudo sozinha e reclamava, mas ninguém dividia.", "score": 1, "profiles": {"A": 2, "C": 1}}, {"id": "e", "text": "Vejo semelhanças claras com o que vivo hoje. Nomear eu consigo; mudar é outra história.", "score": 2, "profiles": {"D": 2}}, {"id": "b", "text": "Problemas ficavam no ar. Conflito era evitado, não resolvido.", "score": 1, "profiles": {"C": 2}}, {"id": "f", "text": "Sei bem de onde vêm algumas das minhas reações e já consegui mudar várias delas.", "score": 3, "profiles": {}}, {"id": "c", "text": "Eu aprendi cedo a me virar sozinha, a não dar trabalho e a agradar para ser vista.", "score": 1, "profiles": {"C": 2, "A": 1}}, {"id": "d", "text": "Nunca tinha pensado na minha infância em relação ao meu casamento.", "score": 0, "profiles": {"C": 1}, "flags": ["history_unexamined"]}], "position_rationale": "Depois de olhar a reação automática, a pergunta sobre a casa de origem. Posição deliberada: só faz sentido perguntar sobre a infância depois que a pessoa já viu a própria reação (Q11). Antes disso pareceria psicologização gratuita."}, {"id": "Q13", "phase": 4, "phase_name": "O que pode estar por trás", "kind": "diagnostic", "type": "single", "field": "q13_pattern_transfer", "pillar": "P2", "weight": 1.0, "goal": "Introduzir, em linguagem simples, a lógica da Síndrome Adaptativa: um jeito de funcionar que foi útil e continua operando em todos os lugares. Medir percepção de transferência do padrão.", "text": "Todo mundo aprende cedo um jeito de funcionar para dar conta da vida: ser forte, agradar, resolver, não incomodar, controlar. Onde o seu aparece hoje?", "options": [{"id": "b", "text": "Aparece em todo lugar: no trabalho, com os filhos, com as amigas. É o meu jeito, mesmo quando me custa.", "score": 1, "profiles": {"C": 1, "A": 1}}, {"id": "a", "text": "Não acho que tenha a ver. O que vivo hoje é sobre o meu casamento, não sobre o meu passado.", "score": 0, "profiles": {"B": 1}, "flags": ["history_unexamined"]}, {"id": "d", "text": "Aparece menos do que antes. Já consegui fazer diferente em algumas áreas; o casamento é onde está mais difícil.", "score": 3, "profiles": {"D": 1}}, {"id": "c", "text": "Aparece, e eu já percebi. Só que na hora da pressão, o automático vence.", "score": 2, "profiles": {"D": 2, "C": 1}}, {"id": "e", "text": "Nunca parei para olhar isso dessa forma.", "score": 0, "profiles": {"C": 1}, "flags": ["history_unexamined"]}], "position_rationale": "Dá nome, em linguagem comum, ao mecanismo da Síndrome Adaptativa e pergunta onde ele aparece hoje. Vem logo após a cena de infância para fechar a ligação história → presente. É a pergunta que faz a pessoa pensar 'talvez eu esteja levando isso para todo lugar'."}, {"id": "Q14", "phase": 4, "phase_name": "O que pode estar por trás", "kind": "diagnostic", "type": "single", "field": "q14_blame_responsibility", "pillar": "P4", "weight": 1.25, "goal": "Diferenciar culpa, responsabilidade, o que depende dela e o que pertence ao parceiro. Captura duas frases de baixa aderência.", "text": "Quando a conversa chega em \"de quem é a culpa\", onde você costuma parar?", "options": [{"id": "b", "text": "Em mim. Se eu fosse mais paciente, mais leve, menos cobrança, talvez ele estivesse mais presente.", "score": 0, "profiles": {"C": 2}, "flags": ["self_blame"]}, {"id": "c", "text": "Vai e volta. Um dia é ele, no outro sou eu. Nunca se resolve.", "score": 1, "profiles": {"B": 1, "D": 1}}, {"id": "a", "text": "Nele. Quem precisa mudar aqui é ele, não eu.", "score": 0, "profiles": {"B": 1}, "flags": ["partner_must_change"]}, {"id": "e", "text": "Separo o que é meu do que é dele e atuo no que está ao meu alcance. Dá trabalho, mas me tira do lugar de vítima ou de carrasco.", "score": 3, "profiles": {}}, {"id": "d", "text": "Eu me responsabilizo pela minha parte, mas na prática continuo tentando controlar a dele.", "score": 2, "profiles": {"A": 1, "D": 1}}, {"id": "f", "text": "Eu só faria alguma coisa diferente se ele mudasse primeiro.", "score": 0, "profiles": {"B": 1}, "flags": ["only_if_partner_first"]}], "position_rationale": "Fecha a Fase 4 com culpa versus responsabilidade. Precisa vir depois de história e padrão; antes disso a pessoa só tem duas respostas: ele ou eu. Depois de Q12 e Q13 ela já tem uma terceira. Captura duas frases de baixa aderência em um lugar onde elas soam naturais."}, {"id": "Q15", "phase": 5, "phase_name": "Possibilidade", "kind": "diagnostic", "type": "single", "field": "q15_knowing_vs_doing", "pillar": "P5", "weight": 1.25, "goal": "Medir a distância entre compreender e conseguir agir, a marca do Perfil D.", "text": "Pense em algo que você já entendeu sobre essa dinâmica, em terapia, num livro, numa conversa. O que acontece com isso na vida real?", "options": [{"id": "b", "text": "Eu uso para explicar o que aconteceu, mas não muda muito o que eu faço.", "score": 1, "profiles": {"D": 2}, "flags": ["knows_but_repeats"]}, {"id": "d", "text": "Já mudei algumas reações de forma consistente. Outras ainda escapam.", "score": 3, "profiles": {}}, {"id": "a", "text": "Na hora H, some. Eu reajo igual e só depois lembro do que sabia.", "score": 0, "profiles": {"D": 2}, "flags": ["knows_but_repeats"]}, {"id": "e", "text": "Sinceramente, eu ainda não entendo o que acontece. Só sei que repete.", "score": 1, "profiles": {"B": 1}}, {"id": "c", "text": "Consigo aplicar quando estou bem. Sob pressão, volto ao padrão.", "score": 2, "profiles": {"D": 1}}], "position_rationale": "Abre a Fase 5. Depois de ver padrão, história e culpa, a pergunta crucial: o que acontece com o que você já sabe? Separa quem precisa de informação de quem precisa de reorganização. Marca do Perfil D e da proposta do Compatíveis."}, {"id": "Q16", "phase": 5, "phase_name": "Possibilidade", "kind": "diagnostic", "type": "single", "field": "q16_explanation", "pillar": "P1", "weight": 1.0, "goal": "Depois de toda a sequência, medir para onde a explicação se moveu: do culpado para a dinâmica.", "text": "Depois de tudo que você respondeu até aqui, o que parece explicar melhor por que isso continua se repetindo?", "options": [{"id": "b", "text": "A falta de comunicação. A gente não sabe conversar.", "score": 1, "profiles": {"B": 1}}, {"id": "a", "text": "Ele. Se ele fosse diferente, nada disso estaria acontecendo.", "score": 0, "profiles": {"B": 2}, "flags": ["external_focus"]}, {"id": "d", "text": "Uma dinâmica entre nós dois que se repete, onde cada um faz a sua parte sem perceber.", "score": 2, "profiles": {"D": 1}}, {"id": "c", "text": "Eu. Deve ter alguma coisa errada comigo.", "score": 1, "profiles": {"C": 1}, "flags": ["self_blame"]}, {"id": "e", "text": "Uma dinâmica entre nós, alimentada por jeitos de funcionar que eu trouxe de antes e ainda não consegui mudar. Ele tem a parte dele; essa é a minha.", "score": 3, "profiles": {"D": 1}}], "position_rationale": "Penúltima diagnóstica. Repete o tema da Q01 (o que explica isso) para a própria pessoa perceber se a explicação se moveu. Começa com 'depois de tudo que você respondeu' para legitimar a mudança de resposta."}, {"id": "Q17", "phase": 5, "phase_name": "Possibilidade", "kind": "diagnostic", "type": "single", "field": "self_reflection_openness", "pillar": "P4", "weight": 1.0, "commercial_criterion": 4, "goal": "Medir abertura para investigar a própria participação. Alimenta o critério comercial 4 e a flag de baixa aderência.", "text": "Se alguém te mostrasse, com cuidado, uma parte sua que está ajudando a sustentar essa repetição, mesmo sem querer, como você reagiria?", "options": [{"id": "b", "text": "Dependeria de como fosse dito. Mas sim, eu toparia olhar.", "score": 2, "profiles": {}, "criterion_met": true, "value": "open_conditional"}, {"id": "d", "text": "Não vejo nada que eu possa ou queira investigar em mim nessa história.", "score": 0, "profiles": {"B": 1}, "criterion_met": false, "flags": ["nothing_to_investigate"], "value": "closed"}, {"id": "a", "text": "Eu quero ver. Prefiro saber a continuar repetindo.", "score": 3, "profiles": {"D": 1}, "criterion_met": true, "value": "open"}, {"id": "e", "text": "Eu já sei qual é a minha parte. O que me falta é conseguir fazer diferente.", "score": 2, "profiles": {"D": 2}, "criterion_met": true, "value": "knows_part"}, {"id": "c", "text": "Acho que eu já olhei demais para mim. Agora é a vez dele.", "score": 1, "profiles": {"B": 1, "A": 1}, "criterion_met": false, "value": "his_turn"}], "position_rationale": "Última diagnóstica e ponte para a Fase 6. Mede abertura para investigar a própria participação, que é ao mesmo tempo diagnóstico (P4), critério comercial 4 e filtro de aderência. Vem depois da Q16 porque só faz sentido perguntar 'toparia olhar?' depois que ela já olhou um pouco."}, {"id": "Q18", "phase": 6, "phase_name": "Prontidão", "kind": "commercial", "type": "scale_0_10", "field": "urgency_score", "commercial_criterion": 3, "goal": "Urgência percebida. Critério comercial 3: 7 ou mais.", "text": "De 0 a 10, quão urgente é para você mudar isso agora?", "scale": {"min": 0, "max": 10, "min_label": "Posso conviver com isso", "max_label": "Não dá mais para ficar assim"}, "criterion_rule": ">= 7", "position_rationale": "Primeira pergunta de prontidão, com transição explícita na tela. Urgência numérica logo após a reflexão, enquanto o custo ainda está presente, sem pressão."}, {"id": "Q19", "phase": 6, "phase_name": "Prontidão", "kind": "commercial", "type": "single", "field": "start_availability", "commercial_criterion": 5, "goal": "Disponibilidade para começar nos próximos 30 dias.", "text": "Se você encontrasse um caminho que fizesse sentido, quando conseguiria começar?", "options": [{"id": "a", "text": "Agora. Nos próximos dias.", "value": "now", "criterion_met": true}, {"id": "b", "text": "Dentro das próximas semanas, até 30 dias.", "value": "30d", "criterion_met": true}, {"id": "c", "text": "Em 1 a 3 meses.", "value": "1-3m", "criterion_met": false}, {"id": "d", "text": "Não sei. Depende de outras coisas antes.", "value": "unsure", "criterion_met": false}, {"id": "e", "text": "Não estou procurando começar nada agora. Só queria entender.", "value": "not_looking", "criterion_met": false}], "position_rationale": "Disponibilidade logo após urgência: o par 'quanto urge / quando consegue' é a leitura mais honesta de momento. A alternativa 'só queria entender' dá uma saída digna para quem não está pronta."}, {"id": "Q20", "phase": 6, "phase_name": "Prontidão", "kind": "commercial", "type": "single", "field": "investment_capacity", "commercial_criterion": 6, "goal": "Capacidade aproximada de investir cerca de R$ 7.500, sem pedir renda.", "text": "Um processo individual sério, com acompanhamento, costuma ficar na faixa de R$ 7.500. Como isso se encaixa na sua realidade hoje?", "options": [{"id": "a", "text": "Cabe. Se fizer sentido, eu decido.", "value": "fits", "criterion_met": true}, {"id": "b", "text": "Cabe com planejamento ou parcelamento.", "value": "fits_with_planning", "criterion_met": true}, {"id": "c", "text": "Cabe, mas eu precisaria envolver meu marido na decisão.", "value": "fits_shared_decision", "criterion_met": true, "flags": ["decision_shared"]}, {"id": "d", "text": "Hoje não cabe.", "value": "does_not_fit", "criterion_met": false}, {"id": "e", "text": "Prefiro não responder.", "value": "no_answer", "criterion_met": false}], "position_rationale": "Investimento vem depois de urgência e disponibilidade, nunca antes. Mostra a faixa de valor abertamente para que a conversa no WhatsApp não comece com surpresa. A alternativa de decisão compartilhada evita falso negativo com a persona."}, {"id": "Q21", "phase": 6, "phase_name": "Prontidão", "kind": "commercial", "type": "single", "field": "action_intent", "commercial_criterion": 7, "goal": "Separar quem quer agir e construir de quem quer apenas validação, garantia ou que o parceiro seja consertado. Captura duas frases de baixa aderência.", "text": "Para fechar: o que você realmente está buscando agora?", "options": [{"id": "c", "text": "Confirmar que eu não estou louca. Que o problema existe.", "value": "validation", "criterion_met": false}, {"id": "a", "text": "Entender o que está por trás disso e agir sobre a minha parte, mesmo que dê trabalho.", "value": "act", "criterion_met": true, "profiles": {"D": 1}}, {"id": "d", "text": "Alguém que faça o meu marido mudar.", "value": "fix_partner", "criterion_met": false, "flags": ["wants_partner_fixed"]}, {"id": "f", "text": "Decidir se eu fico ou se eu vou.", "value": "decide", "criterion_met": true, "flags": ["decision_stay_or_leave"]}, {"id": "b", "text": "Entender melhor. Ainda não sei se quero mexer em alguma coisa.", "value": "understand_only", "criterion_met": false}, {"id": "e", "text": "Só me interessa se tiver garantia de salvar o meu casamento.", "value": "guarantee", "criterion_met": false, "flags": ["guarantee_required"]}], "position_rationale": "Encerra com intenção. É a última porque é a mais honesta quando a pessoa já passou por todo o percurso: ela sabe o que quer agora. Captura as últimas frases de baixa aderência sem julgamento."}]};
+/* Textos da tela de resultado. Fonte: docs/04-copy-resultados.md. */
+const COPY = {
+  profiles: {
+    A: {
+      lead: "{nome}, pelas suas respostas, o perfil que mais aparece é o da Sobrecarregada.",
+      body: [
+        "Você é a pessoa que resolve. A casa funciona porque você lembra. Os filhos funcionam porque você prevê. A relação ainda existe porque você segura. E, quando ele finalmente faz alguma coisa, é porque você pediu, lembrou e explicou como.",
+        "O cansaço que você sente não é frescura e não é falta de organização. É o custo de carregar o que era para ser de dois.",
+        "Agora vem a parte menos confortável, e eu vou dizer com cuidado: em algum momento, carregar tudo deixou de ser só uma circunstância e virou um jeito de funcionar. Você provavelmente aprendeu cedo que pedir dá mais trabalho do que fazer, que depender é arriscado, que ser forte é mais seguro do que ser cuidada. Isso te serviu. Te fez competente, confiável, a pessoa em quem todo mundo se apoia.",
+        "Só que esse mesmo jeito, dentro do casamento, produz um efeito que ninguém quer: quanto mais você assume, menos espaço sobra para ele assumir. Ele se acomoda, você se ressente, e a conta chega como irritação, distância e uma solidão que não faz sentido para quem olha de fora.",
+        "Isso não é culpa sua. É uma dinâmica, e dinâmica tem duas partes. A parte dele é dele. A sua parte é a única sobre a qual você tem alguma ação, e ela é maior do que parece.",
+        "A pergunta que fica: o que aconteceria se você parasse de ser a pessoa que resolve tudo, antes de estar completamente esgotada?"
+      ]
+    },
+    B: {
+      lead: "{nome}, pelas suas respostas, o perfil que mais aparece é o de quem está presa no ciclo cobrança-afastamento.",
+      body: [
+        "Você sente que ele está longe. Vai atrás. Pergunta, insiste, cobra presença, cobra resposta, cobra conversa. Ele se fecha um pouco mais. Você sente mais longe ainda. E cobra mais. Em algum momento, você virou a chata da casa sem nunca ter querido ser, e ele virou o ausente sem nunca ter decidido ser.",
+        "Esse ciclo tem um nome e uma lógica. Quanto mais um busca, mais o outro recua. Quanto mais o outro recua, mais um busca. Ninguém está errado dentro dele. Os dois estão presos.",
+        "Você já tentou de tudo que estava ao alcance: conversar, explicar, dar ultimato, ficar em silêncio para ver se ele percebe. Nada funciona por muito tempo porque tudo isso é movimento dentro do mesmo ciclo. Mudar de tática não é a mesma coisa que sair do padrão.",
+        "O que raramente alguém te diz: a cobrança não é o problema. Ela é a forma que a sua necessidade encontrou para aparecer. Por trás dela tem uma pessoa que precisa se sentir vista e que aprendeu, em algum lugar da vida, que se não insistir, não recebe.",
+        "A solidão de dois é real. Mas o caminho de saída raramente passa por conseguir que ele mude primeiro. Passa por entender o que a sua parte do ciclo está tentando conseguir, e encontrar um jeito diferente de conseguir."
+      ]
+    },
+    C: {
+      lead: "{nome}, pelas suas respostas, o perfil que mais aparece é o de quem está respondendo ao casamento de hoje com uma mochila que veio de antes.",
+      body: [
+        "Você engole. Se adapta. Evita conflito porque conflito, na sua experiência, nunca terminou bem. Cuida dos outros antes de cuidar de você e, quando algo dá errado, a primeira pergunta que faz é: \"O que eu fiz de errado?\"",
+        "Esses jeitos não nasceram neste casamento. Nasceram muito antes, numa casa onde você aprendeu que para ser amada precisava ser fácil, forte, útil ou invisível. Faziam todo sentido naquela época. Eram a melhor estratégia que uma menina tinha para ficar segura.",
+        "O problema é que a estratégia continuou operando depois que a realidade mudou. Você não é mais aquela menina, mas quando ele se afasta, quando a conversa esquenta, quando você precisa pedir, quem responde é ela. E a resposta dela é sempre a mesma: se adaptar, ceder, se culpar, não incomodar.",
+        "Isso tem um efeito concreto na relação: você aceita menos do que precisa para não arriscar perder, e depois paga em ressentimento, cansaço e uma sensação de não ser vista que ele, muitas vezes, nem sabe que existe, porque você nunca deixou aparecer.",
+        "Eu não vou te dizer que o problema é você. O que eu vou dizer é que uma parte importante do que está sustentando essa repetição não é sobre ele e não é sobre o casamento. É sobre uma forma de funcionar que você carrega e que, até hoje, ninguém te ajudou a abrir."
+      ]
+    },
+    D: {
+      lead: "{nome}, pelas suas respostas, o perfil que mais aparece é o de quem já entendeu, mas continua repetindo.",
+      body: [
+        "Você já leu. Já fez terapia. Já ouviu podcast, já fez curso, talvez já tenha passado por processo com especialista. Você sabe explicar a dinâmica do seu casamento melhor do que a maioria das pessoas explicaria a própria. Sabe de onde vêm seus padrões, sabe quando o ciclo começa, sabe até o que deveria fazer diferente.",
+        "E na hora H, faz igual.",
+        "Isso não é falta de inteligência nem de esforço. É a prova de que o problema não está mais no entendimento. Compreender uma dinâmica e conseguir sair dela são duas coisas diferentes, e o que você acumulou até aqui foi muita compreensão e pouca reorganização.",
+        "Tem um risco nesse lugar, e eu vou nomear: o conhecimento vira explicação. Você sabe tão bem por que as coisas acontecem que, sem querer, aceita que elas aconteçam. \"Eu sei que eu faço isso\" vira uma frase que te protege de fazer diferente.",
+        "A boa notícia é que você está muito mais perto do que parece. O que falta não é mais uma camada de informação. É alguém que te ajude a conectar o que você já sabe com decisões concretas na vida real, e te acompanhe enquanto você sustenta um comportamento novo sob pressão, que é exatamente onde ele some hoje."
+      ],
+      highIrcParagraph: "Você está entre as pessoas que mais avançaram nesse caminho, e isso aparece nas suas respostas. O que ainda escapa é pontual, e provavelmente está concentrado em um ou dois lugares da relação onde a pressão é maior. É ali que vale olhar."
+    }
+  },
+  bandIntro: "Isso não é nota do seu casamento. É uma leitura da sua capacidade atual de reconhecer padrões e reorganizar as suas respostas dentro dessa relação.",
+  bands: {
+    automatic: "Pelas suas respostas, boa parte do que acontece entre vocês está rodando no automático. Não porque você não se importe, mas porque as reações já estão tão repetidas que acontecem antes de você decidir. Isso costuma vir junto com muito cansaço, muita solidão e uma sensação de \"eu já tentei tudo\". Você tentou, de fato. O que falta não é esforço. É enxergar a lógica que faz tudo voltar para o mesmo lugar. É por aí que a sua leitura começa.",
+    emerging: "Você já percebe que existe algo além da queixa mais visível. Em alguns momentos consegue nomear o padrão; em outros, ele te leva de volta para a culpa, para a cobrança ou para o silêncio. Esse é um lugar desconfortável, porque você vê o suficiente para não conseguir mais fingir que é só uma fase, mas ainda não o bastante para saber onde agir. A leitura a seguir é sobre isso: o que você já vê, e o que ainda está sustentando a repetição por baixo.",
+    aware_but_repeating: "Você enxerga bastante. Sabe reconhecer o ciclo, sabe o que é seu e o que é dele, provavelmente já fez muita coisa para mudar. E ainda assim alguns pontos continuam presos ao padrão, geralmente os que aparecem sob pressão: na briga, no cansaço, no silêncio da noite. A sua leitura vai mostrar onde está essa diferença entre o que você já entende e o que ainda não consegue sustentar.",
+    hands_on_wheel: "Você está entre as pessoas com maior capacidade de perceber padrões, colocar limites e agir sobre a própria parte. Isso não significa que a relação está resolvida; significa que você tem recursos para trabalhar nela. O que ainda repete é específico, e provavelmente concentrado em um ou dois lugares. A leitura a seguir é para apontar exatamente onde, para você não gastar energia onde já não precisa."
+  },
+  attentionIntro: "Entre os aspectos avaliados, este é o que mais parece alimentar a repetição que você está vivendo. Não é um veredito. É onde eu olharia primeiro.",
+  attention: {
+    clarity: "Pelas suas respostas, a explicação que você tem hoje para o que acontece ainda está muito concentrada no que aparece: ele, a comunicação, a falta de conexão. Isso não está errado. Está incompleto. Quando a explicação para toda a dinâmica cabe em uma pessoa, a única saída possível é essa pessoa mudar, e você já descobriu que esperar por isso não funciona. O que parece estar sustentando a repetição aqui não é falta de esforço: é estar tentando resolver o problema no lugar onde ele aparece, e não no lugar onde ele se sustenta. Enquanto a pergunta for \"quem é o culpado\", a resposta vai continuar sendo a mesma, e a dinâmica também.",
+    history: "Pelas suas respostas, boa parte das suas reações de hoje parece ter sido aprendida muito antes desse casamento. Jeitos de funcionar que fizeram sentido na casa em que você cresceu, para se proteger, ser aceita ou dar conta, continuam respondendo por você quando a pressão aumenta. Isso não é defeito. É adaptação. Mas adaptação que continua operando depois que a realidade mudou vira repetição. O que parece estar sustentando a dinâmica aqui é que você está respondendo ao homem que tem ao lado com estratégias feitas para outra época e outras pessoas. Enquanto isso não for aberto, você vai continuar sentindo que faz tudo \"certo\" e que, mesmo assim, o resultado não muda.",
+    relationship: "Pelas suas respostas, o ponto mais sensível hoje é a própria interação entre vocês: a solidão de estar ao lado de alguém que não está, a conversa que sempre termina no mesmo lugar, a cobrança que afasta e o afastamento que aumenta a cobrança. Vocês provavelmente estão presos em um ciclo em que cada um reage à reação do outro, e ninguém mais sabe quem começou. O que parece estar sustentando a repetição aqui é que as tentativas de resolver, conversar, cobrar, explicar, se calar, são movimentos dentro do ciclo, não para fora dele. Mudar de tática não é sair do padrão. Entender o que a sua parte do ciclo está tentando conseguir, e conseguir de outro jeito, é.",
+    boundaries: "Pelas suas respostas, a fronteira entre o que é seu e o que é dele está borrada. Isso aparece de dois jeitos que parecem opostos e são o mesmo problema: ou você assume tudo, da casa à culpa, ou tenta controlar a parte que é dele para que as coisas finalmente funcionem. Nos dois casos, você carrega o que não é seu e deixa de agir sobre o que é. O que parece estar sustentando a repetição aqui é a ausência de um limite que diga: isso eu faço, isso eu não faço mais, isso é com você. Sem esse limite, ele não tem espaço para assumir nada, e você não tem energia para mudar nada. Aquilo que você não muda, você aceita. E o que você aceita, se repete.",
+    action: "Pelas suas respostas, o que falta não é compreensão. Você entende bastante do que acontece. O ponto mais sensível é a distância entre saber e viver diferente: na hora da pressão, o automático vence e o conhecimento só volta depois, como explicação. Isso é desgastante de um jeito específico, porque você não pode mais dizer que não sabe, e ao mesmo tempo não consegue mudar. O que parece estar sustentando a repetição aqui é que entendimento sozinho não reorganiza nada. Reorganização pede decisão concreta, um plano para a vida real e alguém que te ajude a sustentar o comportamento novo exatamente nos momentos em que ele costuma sumir."
+  },
+  pillarShort: { P1: "Clareza e consciência do padrão", P2: "História e mochila emocional", P3: "Dinâmica relacional, presença e conexão", P4: "Responsabilidade, limites e papéis", P5: "Reorganização e capacidade de agir" },
+  pillarRead: {
+    P1: ["A explicação ainda está concentrada em uma pessoa (ele ou você). A dinâmica entre vocês quase não aparece na sua leitura.", "Você já percebe que tem algo além da queixa, mas ainda alterna entre culpar e se culpar.", "Você distingue sintoma, padrão e o que sustenta a repetição, sem transformar isso em culpa."],
+    P2: ["Suas reações de hoje parecem antigas, e você ainda não olhou de onde vêm.", "Você reconhece influências da sua história, mas mudar a resposta ainda é difícil.", "Você sabe de onde vêm alguns padrões e já escolhe comportamentos diferentes."],
+    P3: ["Solidão, cobrança e afastamento intensos. O ciclo está rodando com força.", "Você reconhece o ciclo, mas ainda não consegue interrompê-lo com consistência.", "Você consegue expressar o que precisa e construir interações novas, mesmo que nem sempre funcionem."],
+    P4: ["Ou você assume tudo (inclusive a culpa), ou tenta controlar a parte dele.", "Você assume a sua parte, mas ainda mistura o que é seu com o que é dele.", "Você coloca limites e age principalmente sobre o que pode mudar."],
+    P5: ["Você entende, mas repete. Na pressão, o automático vence.", "Você consegue agir com apoio, mas volta ao padrão quando aperta.", "Você transforma compreensão em decisão e sustenta comportamentos novos."]
+  },
+  highlights: {
+    rep: "É o seu Principal Ponto de Atenção. Está detalhado acima.",
+    aw: "Esse é um recurso. Vale usar a clareza que você tem aqui para olhar o resto.",
+    pos: "Não é o ponto mais frágil nem o mais forte. É onde uma mudança pequena tende a produzir efeito mais rápido."
+  },
+  appears: [
+    "Tem uma diferença entre o que aparece na relação e o que sustenta a dinâmica.",
+    "O que aparece é o que você vê todo dia: ele no celular, a conversa que não anda, a casa nas suas costas, a solidão de dois. É real, e dói. Mas é a parte visível.",
+    "O que sustenta é o que faz tudo isso voltar sempre para o mesmo lugar, mesmo depois de tudo que você já tentou: um ciclo em que cada um reage ao outro, jeitos de funcionar que vieram de antes, limites que nunca foram colocados, um conhecimento que não virou decisão.",
+    "Você passou anos tentando mudar o que aparece. Esse Raio-X é um convite para olhar o que sustenta."
+  ],
+  reflection: {
+    clarity: "Se o problema não fosse ele, e também não fosse eu, o que seria?",
+    history: "Em que outros lugares da minha vida eu reajo exatamente como reajo com ele?",
+    relationship: "O que eu estou tentando conseguir quando cobro (ou quando me calo)? E tem outro jeito de conseguir isso?",
+    boundaries: "O que eu continuo fazendo que não é meu de fazer? E o que acontece se eu parar?",
+    action: "Qual é a única coisa que eu já sei que deveria fazer diferente e ainda não fiz? O que, exatamente, me impede na hora?"
+  },
+  action: {
+    A: "Escolha uma coisa da casa ou da família que você sempre resolve. Peça para ele assumir, inteira, sem instruções. E aguente a vontade de corrigir. Observe o que acontece dentro de você, não o que acontece com a tarefa.",
+    B: "Na próxima vez que sentir ele longe, em vez de perguntar \"o que houve\", diga uma frase sobre você: \"senti sua falta hoje\". Uma vez. Sem esperar resposta. Observe o que é mais difícil nisso.",
+    C: "Anote, durante três dias, cada vez que você engolir algo para não criar conflito. Não precisa fazer nada com a lista. Só ver o tamanho dela.",
+    D: "Escolha um padrão que você já conhece bem. Escreva, em uma linha, o que você vai fazer diferente da próxima vez que ele aparecer. Cole no espelho. O objetivo não é acertar; é perceber o momento exato em que o automático assume."
+  },
+  compativeis: {
+    standard: [
+      "Você pode fazer com esse Raio-X o que normalmente se faz com um quiz: ler, concordar com algumas partes, discordar de outras, e seguir a vida. Vai ser útil mesmo assim.",
+      "Ou pode fazer o que ele foi feito para provocar: entender de verdade o que está por trás disso.",
+      "**O Compatíveis é o processo individual para entender o que está por trás do padrão que você está vivendo, reorganizar o que precisa mudar e construir um Plano de Ação para a vida real.**",
+      "É um trabalho a dois: você e Márcio Conceição. Ele investiga a sua história, o seu comportamento, o seu ambiente, as suas relações, a sua família de origem, as contradições e as adaptações que você foi fazendo ao longo da vida, e conecta fatos que você provavelmente enxerga de forma fragmentada. O objetivo não é você entender melhor. É você sair da confusão, enxergar a lógica, reorganizar o que está sustentando a repetição e agir, com acompanhamento, até o comportamento novo se sustentar sozinho.",
+      "A filosofia dele é simples: *\"Eu não resolvo a pessoa. Eu resolvo com a pessoa.\"*",
+      "Não é terapia, não é curso, não é mentoria de relacionamento. Não é sobre fazer o seu marido mudar e não é sobre salvar casamento a qualquer custo. É sobre você conseguir enxergar o que está por trás do que repete, e decidir, com clareza, o que fazer com isso.",
+      "O próximo passo não é uma compra. É uma conversa. Você fala com a equipe pelo WhatsApp, a gente entende o seu momento e, se fizer sentido para os dois lados, marca uma conversa de aplicação com o Márcio."
+    ],
+    lowAdherence: [
+      "Uma parte das suas respostas diz algo que eu respeito: você sente que já fez a sua parte, e que quem precisa se mexer é ele. Pode ser que seja exatamente assim. Eu não conheço o seu casamento; conheço as suas respostas.",
+      "O que eu posso dizer é que o Compatíveis não é um processo para mudar o seu marido. Ninguém consegue prometer isso com honestidade. É um processo individual para você entender o que está por trás da dinâmica que se repete, decidir com clareza o que é seu e o que não é, e construir um Plano de Ação para a sua vida, com ou sem mudança da parte dele.",
+      "Se em algum momento fizer sentido olhar para isso, a conversa está aberta. Sem pressa."
+    ]
+  },
+  safety: {
+    lead: "{nome}, antes de qualquer leitura, uma coisa mais importante.",
+    intro: "Em uma das suas respostas apareceu algo que merece mais cuidado do que um quiz consegue dar.",
+    violence: "Se na sua casa existem gritos que assustam, ameaças, coisas quebradas ou medo de verdade, isso não é dinâmica de casal. É uma situação de risco, e você não precisa resolver sozinha. Se puder, fale com alguém de confiança hoje.",
+    violenceContacts: [["Ligue 180", "Central de Atendimento à Mulher, 24h, gratuito"], ["190", "Polícia Militar, em emergência"]],
+    distress: "Se você está no limite, de um jeito que te assusta, com dias em que sente que não aguenta mais viver assim, isso merece ser cuidado agora, por gente preparada para isso. Procure um profissional de saúde ou um psicólogo.",
+    distressContacts: [["CVV 188", "24h, gratuito, também por chat em cvv.org.br"], ["SAMU 192", "se houver risco imediato"]],
+    outro: "Nenhum processo, curso ou conversa substitui esse cuidado. O que vem abaixo é a sua leitura, e ela continua valendo. Mas ela vem depois disso, não no lugar disso.",
+    alt: "Quando você quiser, a gente conversa sobre o seu Raio-X. Mas primeiro, o que importa é você estar segura e amparada. Os canais acima existem para isso. Se preferir, deixe que a gente entre em contato com calma, sem pressa e sem proposta nenhuma: só para saber como você está.",
+    altButton: "Pode me chamar quando for possível",
+    altDone: "Combinado. Alguém da equipe vai te procurar com calma."
+  },
+  cta: {
+    main: "Quero entender o que está por trás disso.",
+    sub: "Você vai para o WhatsApp da equipe. Sem compromisso, sem checkout. Só uma conversa para entender o seu momento.",
+    secondary: "Prefiro receber mais conteúdo antes.",
+    secondaryDone: "Anotado. Você vai receber os conteúdos do seu perfil antes de qualquer conversa.",
+    message: (perfil, ponto) => `Oi! Acabei de fazer o Raio-X do Meu Relacionamento. Meu perfil deu "${perfil}" e o ponto de atenção foi "${ponto}". Quero entender o que está por trás disso.`
+  },
+  disclaimer: "Este Raio-X é uma ferramenta de reflexão e leitura de padrões. Não é diagnóstico psicológico, psiquiátrico, médico ou clínico, e não substitui acompanhamento profissional. Os resultados refletem exclusivamente as respostas dadas neste momento.",
+  interstitials: {
+    Q02: "Três cliques rápidos para a leitura ser sobre a sua vida, e não sobre uma mulher genérica.",
+    Q05: "Agora, de volta ao que importa.",
+    Q07: "Até aqui você descreveu o que aparece. Agora vamos olhar há quanto tempo isso aparece.",
+    Q11: "Você já viu o que acontece e há quanto tempo acontece. As próximas perguntas são sobre a parte menos visível: o que pode estar sustentando essa repetição. Nenhuma delas é sobre culpa.",
+    Q15: "Últimas perguntas da leitura. Elas são sobre a distância entre saber e conseguir fazer diferente.",
+    Q18: "Quase lá. As quatro próximas perguntas não mudam a sua leitura. Elas me ajudam a entender em que momento você está, para o que vem depois fazer sentido para você."
+  }
+};
+
+/* RAIO-X DO SEU RELACIONAMENTO · aplicação. Motor de scoring portado de scripts/score.py. */
+const CONFIG = {
+  // Número do WhatsApp da equipe, formato internacional sem símbolos (55 + DDD + número). Ajustar antes de publicar.
+  whatsappNumber: "5500000000000",
+  storageKey: "raiox-v1"
+};
+const META = QUIZ.meta;
+const QS = QUIZ.questions;
+const QBY = Object.fromEntries(QS.map(q => [q.id, q]));
+const PILLARS = ["P1", "P2", "P3", "P4", "P5"];
+const PROFILES = ["A", "B", "C", "D"];
+const PHASE_NAME = { 1: "Reconhecimento", 2: "Repetição", 3: "Custo", 4: "O que pode estar por trás", 5: "Possibilidade", 6: "Prontidão" };
+
+/* ------------------------------------------------------------------ motor */
+function opt(q, id) { const o = q.options.find(o => o.id === id); if (!o) throw new Error(q.id + ": alternativa " + id); return o; }
+function pillarMax() { const m = {}; for (const q of QS) if (q.pillar) m[q.pillar] = (m[q.pillar] || 0) + q.weight * 3; return m; }
+function tiebreak(cands, rules, trace) {
+  for (const [name, key] of rules) {
+    const best = Math.min(...cands.map(key));
+    const nxt = cands.filter(c => key(c) === best);
+    trace.push(`${name}: [${cands}] -> [${nxt}]`);
+    cands = nxt; if (cands.length === 1) break;
+  }
+  return cands;
+}
+function score(answers) {
+  const pts = {}, zeros = {}, zeroW = {}, crit = {};
+  const prof = { A: 0, B: 0, C: 0, D: 0 }, heavy = { A: 0, B: 0, C: 0, D: 0 }, strong = { A: 0, B: 0, C: 0, D: 0 };
+  const flags = [], criteria = {}, fields = {};
+  for (const p of PILLARS) { pts[p] = 0; zeros[p] = 0; zeroW[p] = 0; crit[p] = 0; }
+  const addProfiles = (q, o) => { const w = q.weight || 1; for (const [p, v] of Object.entries(o.profiles || {})) { prof[p] += v; if (w > 1) heavy[p] += v; if (v >= 2) strong[p] += 1; } };
+  for (const [qid, ans] of Object.entries(answers)) {
+    const q = QBY[qid]; if (!q || ans === undefined || ans === null) continue;
+    if (q.type === "scale_0_10") { fields[q.field] = ans; if (q.commercial_criterion) criteria[q.commercial_criterion] = ans >= 7; continue; }
+    if (q.type === "multi") {
+      const chosen = ans.slice(), opts = chosen.map(a => opt(q, a));
+      const excl = new Set(q.multi_rules.count_excludes);
+      const count = opts.filter(o => !excl.has(o.id)).length;
+      fields[q.field] = chosen; fields.previous_solutions_count = count;
+      if (q.commercial_criterion) criteria[q.commercial_criterion] = count >= 2;
+      const tmp = {};
+      for (const o of opts) for (const [p, v] of Object.entries(o.profiles || {})) tmp[p] = (tmp[p] || 0) + v;
+      const k = opts.filter(o => o.knowledge_item).length;
+      if (k >= 2) tmp.D = 2; else if (k === 1) tmp.D = 1;
+      for (const [p, v] of Object.entries(tmp)) prof[p] += Math.min(v, q.multi_rules.profile_cap);
+      continue;
+    }
+    const o = opt(q, ans);
+    fields[q.field] = o.value !== undefined ? o.value : o.id;
+    for (const [k, v] of Object.entries(o.derive || {})) fields[k] = v;
+    if (q.pillar) { pts[q.pillar] += o.score * q.weight; if (o.score === 0) { zeros[q.pillar] += 1; zeroW[q.pillar] += q.weight; } }
+    if (q.commercial_criterion && "criterion_met" in o) criteria[q.commercial_criterion] = !!o.criterion_met;
+    addProfiles(q, o);
+    for (const f of (o.flags || [])) { flags.push(f); if (q.pillar && !META.risk_flags[f].safety) crit[q.pillar] += 1; }
+  }
+  const mx = pillarMax();
+  const ps = {}; for (const p of PILLARS) ps[p] = Math.round(100 * pts[p] / mx[p]);
+  const irc = Math.round(PILLARS.reduce((s, p) => s + ps[p], 0) / 5);
+  const band = META.irc_bands.find(b => irc >= b.min && irc <= b.max);
+  const impact = META.pillar_impact_order;
+  const lowest = Math.min(...PILLARS.map(p => ps[p]));
+  let tied = PILLARS.filter(p => ps[p] - lowest <= 5);
+  const attTrace = [`candidatos: [${tied}]`];
+  if (tied.length > 1) tied = tiebreak(tied, [
+    ["1. sinais críticos", p => -crit[p]], ["2. respostas com score 0", p => -zeros[p]],
+    ["3. peso das perguntas com score 0", p => -zeroW[p]], ["4. impacto na dinâmica", p => impact.indexOf(p)]], attTrace);
+  const attention = tied[0];
+  const top = Math.max(...PROFILES.map(p => prof[p]));
+  let cands = PROFILES.filter(p => prof[p] === top);
+  const profTrace = [];
+  if (cands.length > 1) { const fb = META.attention_to_profile_fallback[attention]; cands = tiebreak(cands, [
+    ["1. pontos em perguntas peso 1.25", p => -heavy[p]], ["2. sinais fortes", p => -strong[p]], ["3. explica o ponto de atenção", p => p === fb ? 0 : 1]], profTrace); }
+  const profile = cands[0];
+  let readiness = 0; for (let c = 1; c <= 7; c++) if (criteria[c]) readiness++;
+  const cband = META.commercial_bands.find(b => readiness >= b.min && readiness <= b.max);
+  const lowAdh = flags.filter(f => META.risk_flags[f].low_adherence);
+  const safety = flags.filter(f => META.risk_flags[f].safety);
+  const route = safety.length ? "safety" : lowAdh.length ? "nurture_low_adherence" : readiness >= 4 ? "sales_triage" : "nurture";
+  const tags = [META.profiles[profile].tag, META.pillars[attention].tag, cband.tag];
+  if (lowAdh.length) tags.push("LOW_ADHERENCE"); if (safety.length) tags.push("SAFETY_FLAG");
+  if (flags.includes("decision_shared")) tags.push("DECISION_SHARED");
+  if (flags.includes("repetition_intense")) tags.push("REPETITION_INTENSE");
+  if (["35-44", "45-52"].includes(fields.age_range) && fields.relationship_status === "married_or_cohabiting") tags.push("PERSONA_CORE");
+  const mostAware = PILLARS.slice().sort((a, b) => (ps[b] - ps[a]) || (impact.indexOf(b) - impact.indexOf(a)))[0];
+  const middle = PILLARS.filter(p => p !== attention && p !== mostAware);
+  const mostPossible = middle.slice().sort((a, b) => (crit[a] - crit[b]) || (ps[b] - ps[a]) || (impact.indexOf(a) - impact.indexOf(b)))[0];
+  const pf = {}; for (const p of PILLARS) pf[META.pillars[p].field] = ps[p];
+  return {
+    fields, pillar_scores: pf, pillar_scores_by_code: ps,
+    relationship_reorganization_index: irc, irc_band: band.key, irc_band_name: band.name,
+    dominant_profile: META.profiles[profile].key, dominant_profile_code: profile, dominant_profile_name: META.profiles[profile].name,
+    profile_affinity: Object.fromEntries(PROFILES.map(p => [META.profiles[p].key, prof[p]])), profile_trace: profTrace,
+    main_attention_point: META.pillars[attention].key, main_attention_code: attention, main_attention_point_name: META.pillars[attention].name, attention_trace: attTrace,
+    pillar_reading: { most_repeating: META.pillars[attention].key, most_aware: META.pillars[mostAware].key, most_possible: META.pillars[mostPossible].key },
+    pillar_reading_codes: { rep: attention, aw: mostAware, pos: mostPossible },
+    commercial_criteria: Object.fromEntries([1,2,3,4,5,6,7].map(c => [c, !!criteria[c]])),
+    commercial_readiness: readiness, commercial_classification: cband.key, commercial_classification_name: cband.name,
+    lead_route: route, low_adherence: lowAdh.length > 0, low_adherence_flags: lowAdh,
+    safety_flag: safety.length > 0, safety_flags: safety, risk_flags: [...new Set(flags)].sort(), tags
+  };
+}
+
+/* ------------------------------------------------------------------ estado */
+const INTERSTITIAL_BEFORE = Object.keys(COPY.interstitials);
+const steps = [{ kind: "cover" }];
+for (const q of QS) { if (INTERSTITIAL_BEFORE.includes(q.id)) steps.push({ kind: "inter", qid: q.id }); steps.push({ kind: "q", qid: q.id }); }
+steps.push({ kind: "capture" }); steps.push({ kind: "result" });
+
+const state = { i: 0, answers: {}, lead: {}, startedAt: null, nurture: false, safetyOk: false };
+function save() { try { localStorage.setItem(CONFIG.storageKey, JSON.stringify(state)); } catch (e) {} }
+function load() { try { const s = JSON.parse(localStorage.getItem(CONFIG.storageKey)); if (s && typeof s.i === "number") Object.assign(state, s); } catch (e) {} }
+function reset() { try { localStorage.removeItem(CONFIG.storageKey); } catch (e) {} Object.assign(state, { i: 0, answers: {}, lead: {}, startedAt: null, nurture: false, safetyOk: false }); render(); }
+function track(ev, params) { /* ponto de integração GTM / GA4 / Meta. */ try { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event: ev }, params || {})); } catch (e) {} }
+
+/* ------------------------------------------------------------------ render */
+const $ = sel => document.querySelector(sel);
+const el = (tag, attrs, ...kids) => { const n = document.createElement(tag); for (const [k, v] of Object.entries(attrs || {})) { if (k === "class") n.className = v; else if (k.startsWith("on")) n.addEventListener(k.slice(2), v); else if (v !== null && v !== undefined) n.setAttribute(k, v); } for (const k of kids.flat()) if (k !== null && k !== undefined) n.append(k.nodeType ? k : document.createTextNode(String(k))); return n; };
+const md = s => { const esc = s.replace(/&/g, "&amp;").replace(/</g, "&lt;"); return esc.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\*(.+?)\*/g, "<em>$1</em>"); };
+const pEl = (s, cls) => { const p = el("p", cls ? { class: cls } : {}); p.innerHTML = md(s); return p; };
+const fill = (s, name) => s.replace("{nome}", name || "Você");
+
+function questionIndex(qid) { return QS.findIndex(q => q.id === qid); }
+function go(i) { state.i = Math.max(0, Math.min(steps.length - 1, i)); save(); render(); window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" }); }
+
+function render() {
+  const step = steps[state.i];
+  const root = $("#app"); root.innerHTML = "";
+  const bar = $("#progress i"); const phase = $("#phase");
+  let pct = 0, ptxt = "";
+  if (step.kind === "q" || step.kind === "inter") { const q = QBY[step.qid]; const idx = questionIndex(step.qid); pct = idx / QS.length * 100; ptxt = (q.kind === "context" ? "Contexto" : PHASE_NAME[q.phase]) + " · " + (idx + 1) + "/" + QS.length; }
+  else if (step.kind === "capture") { pct = 100; ptxt = "Seu Raio-X"; }
+  else if (step.kind === "result") { pct = 100; ptxt = "Resultado"; }
+  bar.style.width = pct + "%"; phase.textContent = ptxt;
+  root.append(({ cover: renderCover, inter: renderInter, q: renderQuestion, capture: renderCapture, result: renderResult })[step.kind](step));
+}
+
+function renderCover() {
+  track("quiz_view");
+  return el("section", { class: "screen cover" },
+    el("p", { class: "eyebrow" }, "Márcio Conceição"),
+    el("h1", {}, "Raio-X do Seu Relacionamento"),
+    el("p", { class: "sub" }, META.subtitle),
+    el("p", { class: "lede" }, "21 perguntas. Entre 7 e 10 minutos. Não existe resposta certa; existe a resposta que mais parece com você. Ao final você recebe uma leitura dos padrões que apareceram nas suas respostas."),
+    el("p", { class: "lede" }, "Isso não é um diagnóstico psicológico: é um mapa para você pensar com mais clareza."),
+    el("div", { class: "row" },
+      el("button", { class: "btn", id: "start", onclick: () => { state.startedAt = Date.now(); track("quiz_start"); go(1); } }, "Começar"),
+      Object.keys(state.answers).length ? el("button", { class: "btn ghost", onclick: () => go(firstUnanswered()) }, "Continuar de onde parei") : null)
+  );
+}
+function firstUnanswered() { for (let i = 1; i < steps.length; i++) { const s = steps[i]; if (s.kind === "q" && state.answers[s.qid] === undefined) return i; } return steps.length - 2; }
+
+function renderInter(step) {
+  return el("section", { class: "screen" },
+    el("p", { class: "quote" }, COPY.interstitials[step.qid]),
+    el("div", { class: "row" }, el("button", { class: "btn ghost", onclick: () => go(state.i - 1) }, "Voltar"), el("button", { class: "btn", id: "cont", onclick: () => go(state.i + 1) }, "Continuar"))
+  );
+}
+
+function renderQuestion(step) {
+  const q = QBY[step.qid]; const cur = state.answers[q.id];
+  const sec = el("section", { class: "screen" }, el("p", { class: "eyebrow" }, q.kind === "context" ? "Contexto" : "Fase " + q.phase + " · " + PHASE_NAME[q.phase]), el("h2", { class: "qtext" }, q.text));
+  const next = () => { track("question_answered", { question_id: q.id, phase: q.phase }); go(state.i + 1); };
+  if (q.type === "single") {
+    sec.append(el("div", { class: "options", role: "group" }, q.options.map(o => el("button", { class: "opt", "data-opt": o.id, "aria-pressed": cur === o.id ? "true" : "false", onclick: () => { state.answers[q.id] = o.id; save(); setTimeout(next, 180); } }, el("span", { class: "mark" }), el("span", {}, o.text)))));
+  } else if (q.type === "multi") {
+    const sel = new Set(cur || []);
+    const list = el("div", { class: "options", role: "group" });
+    const cont = el("button", { class: "btn", id: "cont", disabled: sel.size ? null : "", onclick: () => { state.answers[q.id] = [...sel]; save(); next(); } }, "Continuar");
+    const draw = () => { list.innerHTML = ""; for (const o of q.options) list.append(el("button", { class: "opt multi", "data-opt": o.id, "aria-pressed": sel.has(o.id) ? "true" : "false", onclick: () => { if (o.exclusive) { const had = sel.has(o.id); sel.clear(); if (!had) sel.add(o.id); } else { sel.delete(q.options.find(x => x.exclusive).id); sel.has(o.id) ? sel.delete(o.id) : sel.add(o.id); } cont.disabled = !sel.size; draw(); } }, el("span", { class: "mark" }), el("span", {}, o.text))); };
+    draw(); sec.append(list); sec.append(el("div", { class: "row" }, el("button", { class: "btn ghost", onclick: () => go(state.i - 1) }, "Voltar"), cont)); return sec;
+  } else if (q.type === "scale_0_10") {
+    let val = cur;
+    const cont = el("button", { class: "btn", id: "cont", disabled: val === undefined ? "" : null, onclick: () => { state.answers[q.id] = val; save(); next(); } }, "Continuar");
+    const grid = el("div", { class: "scale", role: "group" });
+    const draw = () => { grid.innerHTML = ""; for (let n = 0; n <= 10; n++) grid.append(el("button", { class: "opt", "data-opt": n, "aria-pressed": val === n ? "true" : "false", onclick: () => { val = n; cont.disabled = false; draw(); } }, el("span", { class: "mark" }), String(n))); };
+    draw(); sec.append(grid, el("div", { class: "scale-labels" }, el("span", {}, q.scale.min_label), el("span", {}, q.scale.max_label)), el("div", { class: "row" }, el("button", { class: "btn ghost", onclick: () => go(state.i - 1) }, "Voltar"), cont)); return sec;
+  }
+  sec.append(el("div", { class: "row" }, el("button", { class: "btn ghost", onclick: () => go(state.i - 1) }, "Voltar"), el("span", { class: "note" }, "Toque na alternativa para avançar")));
+  return sec;
+}
+
+function renderCapture() {
+  track("quiz_complete", { completion_seconds: state.startedAt ? Math.round((Date.now() - state.startedAt) / 1000) : null });
+  const L = state.lead; const err = el("p", { class: "err", id: "err" });
+  const name = el("input", { type: "text", id: "lead_name", autocomplete: "given-name", placeholder: "Como você gosta de ser chamada", value: L.name || "" });
+  const wa = el("input", { type: "tel", id: "lead_whatsapp", autocomplete: "tel", inputmode: "tel", placeholder: "(11) 99999-9999", value: L.whatsapp || "" });
+  const em = el("input", { type: "email", id: "lead_email", autocomplete: "email", placeholder: "Se quiser receber a leitura por escrito", value: L.email || "" });
+  const consent = el("input", { type: "checkbox", id: "consent" }); consent.checked = !!L.consent;
+  const form = el("form", { class: "screen", onsubmit: e => {
+    e.preventDefault(); err.textContent = "";
+    const digits = wa.value.replace(/\D/g, "");
+    if (!name.value.trim()) return err.textContent = "Escreva seu nome para a leitura falar com você.";
+    if (digits.length < 10 || digits.length > 13) return err.textContent = "Confira o WhatsApp: precisa ter DDD e número.";
+    if (em.value && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em.value)) return err.textContent = "O e-mail não parece completo.";
+    if (!consent.checked) return err.textContent = "Para enviar o resultado, precisamos da sua autorização de contato.";
+    state.lead = { name: name.value.trim(), whatsapp: digits.length <= 11 ? "55" + digits : digits, email: em.value.trim(), consent: true, consent_timestamp: new Date().toISOString() };
+    save(); track("lead_capture_complete", { has_email: !!em.value }); go(state.i + 1);
+  } },
+    el("p", { class: "eyebrow" }, "Pronto"),
+    el("h2", {}, "Seu Raio-X está pronto."),
+    el("p", { class: "lede" }, "Preencha seus dados para acessar a sua leitura completa: seu índice, seu perfil, o ponto que mais parece estar sustentando essa repetição e um primeiro passo prático."),
+    el("div", { class: "field" }, el("label", { for: "lead_name" }, "Nome"), name),
+    el("div", { class: "field" }, el("label", { for: "lead_whatsapp" }, "WhatsApp com DDD"), wa),
+    el("div", { class: "field" }, el("label", { for: "lead_email" }, "E-mail (opcional)"), em),
+    el("label", { class: "check" }, consent, el("span", {}, "Autorizo o contato da equipe de Márcio Conceição pelo WhatsApp e e-mail e o tratamento dos meus dados para envio do resultado e de conteúdos relacionados, conforme a Política de Privacidade.")),
+    el("p", { class: "note" }, "Seus dados não são vendidos nem compartilhados. Você pode pedir exclusão a qualquer momento."),
+    err,
+    el("button", { class: "btn block", type: "submit", id: "see" }, "Ver meu Raio-X"),
+    el("p", { class: "note" }, "Este resultado é uma ferramenta de reflexão, não um diagnóstico psicológico, médico ou clínico."),
+    el("button", { class: "linkish", type: "button", onclick: () => go(state.i - 1) }, "Voltar para a última pergunta")
+  );
+  return form;
+}
+
+function renderResult() {
+  const r = score(state.answers); const name = state.lead.name || "Você";
+  track("result_view", { dominant_profile: r.dominant_profile, main_attention_point: r.main_attention_point, irc_band: r.irc_band, commercial_classification: r.commercial_classification, lead_route: r.lead_route, safety_flag: r.safety_flag, low_adherence: r.low_adherence });
+  const sec = el("section", { class: "screen" });
+  if (r.safety_flag) {
+    const c = el("div", { class: "card danger" }, el("h2", {}, fill(COPY.safety.lead, name)), pEl(COPY.safety.intro));
+    if (r.safety_flags.includes("safety_violence")) c.append(pEl(COPY.safety.violence), el("div", { class: "contacts" }, COPY.safety.violenceContacts.map(([n, d]) => el("div", {}, el("b", {}, n), " · " + d))));
+    if (r.safety_flags.includes("safety_acute_distress")) c.append(pEl(COPY.safety.distress), el("div", { class: "contacts" }, COPY.safety.distressContacts.map(([n, d]) => el("div", {}, el("b", {}, n), " · " + d))));
+    c.append(pEl(COPY.safety.outro)); sec.append(c);
+  }
+  sec.append(el("div", {}, el("p", { class: "eyebrow" }, "Seu Raio-X do Relacionamento"), el("h1", { style: "font-size:34px" }, name + ", aqui está a leitura das suas respostas."), el("p", { class: "lede", style: "margin-top:10px" }, "Antes de começar: isso não é um diagnóstico. É um mapa feito a partir do que você respondeu, para dar nome a coisas que você vive e, talvez, mostrar uma parte que ainda não estava conectada.")));
+  // Índice
+  sec.append(el("div", { class: "card" }, el("p", { class: "eyebrow" }, "Índice de Reorganização Relacional"), el("div", { class: "big" }, String(r.relationship_reorganization_index), el("small", {}, " de 100")), el("p", { class: "bandname" }, r.irc_band_name), pEl(COPY.bandIntro, "note"), pEl(COPY.bands[r.irc_band])));
+  // Perfil
+  const prof = COPY.profiles[r.dominant_profile_code];
+  const pc = el("div", { class: "card accent" }, el("p", { class: "eyebrow" }, "Seu perfil"), el("h2", {}, r.dominant_profile_name), pEl(fill(prof.lead, name)));
+  prof.body.forEach((p, i) => { if (r.dominant_profile_code === "D" && i === 3 && r.relationship_reorganization_index >= 75) pc.append(pEl(prof.highIrcParagraph)); else pc.append(pEl(p)); });
+  sec.append(pc);
+  // Atenção
+  sec.append(el("div", { class: "card" }, el("p", { class: "eyebrow" }, "Principal Ponto de Atenção"), el("h2", {}, "O ponto que mais parece estar sustentando essa repetição hoje: " + r.main_attention_point_name + "."), pEl(COPY.attentionIntro, "note"), pEl(COPY.attention[r.main_attention_point])));
+  // Pilares
+  const pil = el("div", { class: "pillars" });
+  for (const p of PILLARS) { const v = r.pillar_scores_by_code[p]; const band = v <= 33 ? 0 : v <= 66 ? 1 : 2; pil.append(el("div", { class: "pillar" }, el("div", { class: "head" }, el("b", {}, COPY.pillarShort[p]), el("span", {}, v + "/100")), el("div", { class: "bar" }, el("i", { style: "width:" + v + "%" })), el("p", { class: "read" }, COPY.pillarRead[p][band]))); }
+  const codes = r.pillar_reading_codes;
+  sec.append(el("div", { class: "card" }, el("p", { class: "eyebrow" }, "Seus cinco pilares"), el("p", { class: "note" }, "Quanto maior, maior a sua capacidade atual de perceber e reorganizar neste ponto."), pil,
+    el("div", { class: "hl" },
+      el("div", { class: "rep" }, el("b", {}, "Onde mais repete: " + COPY.pillarShort[codes.rep]), el("span", {}, COPY.highlights.rep)),
+      el("div", { class: "aw" }, el("b", {}, "Onde você tem mais consciência: " + COPY.pillarShort[codes.aw]), el("span", {}, COPY.highlights.aw)),
+      el("div", { class: "pos" }, el("b", {}, "Onde existe mais possibilidade de reorganização agora: " + COPY.pillarShort[codes.pos]), el("span", {}, COPY.highlights.pos)))));
+  // Aparece x sustenta
+  sec.append(el("div", { class: "card" }, el("p", { class: "eyebrow" }, "O que aparece e o que sustenta"), COPY.appears.map(p => pEl(p))));
+  // Reflexão e ação
+  sec.append(el("div", { class: "card" }, el("p", { class: "eyebrow" }, "Uma reflexão e um primeiro passo"), el("h3", {}, "Para pensar esta semana"), el("p", { class: "quote" }, COPY.reflection[r.main_attention_point]), el("h3", {}, "Para fazer esta semana"), pEl(COPY.action[r.dominant_profile_code])));
+  // Compatíveis + CTA
+  if (r.safety_flag) {
+    const done = el("p", { class: "note" }, state.safetyOk ? COPY.safety.altDone : "");
+    sec.append(el("div", { class: "card" }, pEl(COPY.safety.alt), state.safetyOk ? null : el("button", { class: "btn ghost", onclick: e => { state.safetyOk = true; save(); e.target.remove(); done.textContent = COPY.safety.altDone; } }, COPY.safety.altButton), done));
+  } else {
+    const texts = r.lead_route === "nurture_low_adherence" ? COPY.compativeis.lowAdherence : COPY.compativeis.standard;
+    const card = el("div", { class: "card accent" }, el("p", { class: "eyebrow" }, "E agora?"), texts.map(p => pEl(p)));
+    const link = "https://wa.me/" + CONFIG.whatsappNumber + "?text=" + encodeURIComponent(COPY.cta.message(r.dominant_profile_name, r.main_attention_point_name));
+    card.append(el("a", { class: "btn block", id: "cta", href: link, target: "_blank", rel: "noopener", onclick: () => track("cta_click", { cta_variant: "main", lead_route: r.lead_route }) }, COPY.cta.main), el("p", { class: "note" }, COPY.cta.sub));
+    if (r.lead_route === "nurture" || r.lead_route === "nurture_low_adherence") {
+      const done = el("p", { class: "note" }, state.nurture ? COPY.cta.secondaryDone : "");
+      card.append(state.nurture ? null : el("button", { class: "btn ghost block", onclick: e => { state.nurture = true; save(); track("nurture_opt_in", { lead_route: r.lead_route }); e.target.remove(); done.textContent = COPY.cta.secondaryDone; } }, COPY.cta.secondary), done);
+    }
+    sec.append(card);
+  }
+  // Dados (para a equipe)
+  const payload = Object.assign({ lead_name: state.lead.name, lead_whatsapp: state.lead.whatsapp, lead_email: state.lead.email, consent_contact: state.lead.consent, consent_timestamp: state.lead.consent_timestamp, nurture_opt_in: state.nurture, safety_contact_ok: state.safetyOk, quiz_version: META.version }, r.fields, r.pillar_scores, {
+    relationship_reorganization_index: r.relationship_reorganization_index, irc_band: r.irc_band, dominant_profile: r.dominant_profile, main_attention_point: r.main_attention_point,
+    pillar_most_aware: r.pillar_reading.most_aware, pillar_most_possible: r.pillar_reading.most_possible, commercial_readiness: r.commercial_readiness, commercial_classification: r.commercial_classification,
+    low_adherence: r.low_adherence, low_adherence_flags: r.low_adherence_flags, safety_flag: r.safety_flag, safety_flags: r.safety_flags, risk_flags: r.risk_flags, lead_route: r.lead_route, tags: r.tags, raw_answers: state.answers });
+  sec.append(el("details", {}, el("summary", {}, "Dados gerados para o CRM (visível só nesta versão de teste)"), el("pre", {}, JSON.stringify(payload, null, 2))));
+  sec.append(el("p", { class: "foot" }, COPY.disclaimer), el("button", { class: "linkish", onclick: reset }, "Refazer o Raio-X"));
+  return sec;
+}
+
+window.RaioX = { score, QUIZ, steps, state, go, reset };
+load(); render();
+
+</script>
