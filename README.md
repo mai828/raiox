@@ -1,60 +1,115 @@
-# RAIO-X DO SEU RELACIONAMENTO
+# Raio-X do Seu Relacionamento
+
+Aplicação web de diagnóstico relacional da marca Márcio Conceição. Porta de entrada para o processo individual **Compatíveis** (valor de referência R$ 2.500).
 
 > Descubra o que pode estar mantendo seu relacionamento no mesmo lugar, mesmo depois de tudo que você já tentou.
 
-Especificação completa do quiz de qualificação para o **Compatíveis**, de Márcio Conceição: estratégia, perguntas, scoring, perfis, copy de resultado, dados, automação, tracking e testes.
+Toda a lógica diagnóstica é determinística, auditável e baseada em configuração. Não há IA generativa em runtime.
 
-Não é diagnóstico psicológico, psiquiátrico, médico ou clínico. É ferramenta de reflexão, leitura de padrões e orientação.
+## Instalação e execução
+
+```bash
+npm install
+cp .env.example .env.local   # preencha o que tiver
+npm run dev                  # http://localhost:3000
+```
+
+Produção:
+
+```bash
+npm run build
+npm start
+```
+
+## Verificação
+
+```bash
+npm run lint        # ESLint (next/core-web-vitals + typescript)
+npm run typecheck   # tsc --noEmit
+npm run test        # Vitest: cenários de scoring (tests/unit)
+npm run test:e2e    # Playwright: fluxo completo em viewport mobile (faz build e sobe em :3100)
+npm run check       # lint + typecheck + unit
+```
+
+## Variáveis de ambiente
+
+| Variável | Obrigatória | Efeito |
+|---|---|---|
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | Para o CTA funcionar | Número internacional sem símbolos (ex. `5511999999999`). Sem ela, o resultado mostra um fallback com a mensagem pronta e botão de copiar. |
+| `QUIZ_WEBHOOK_URL` | Não | URL que recebe o payload do lead via POST JSON. Sem ela, a rota `/api/lead` registra no log do servidor e responde `{ ok: true, delivered: false, mode: "local" }`. |
+| `NEXT_PUBLIC_PRIVACY_POLICY_URL` | Recomendada | Link do consentimento. |
+| `NEXT_PUBLIC_GA_ID` | Não | Carrega gtag e envia eventos. |
+| `NEXT_PUBLIC_META_PIXEL_ID` | Não | Carrega o Pixel e envia eventos customizados. |
+
+Variáveis `NEXT_PUBLIC_*` são embutidas no build. Alterá-las exige novo `npm run build`.
 
 ## Estrutura
 
-| Arquivo | Blocos do briefing | Conteúdo |
-|---|---|---|
-| `docs/01-visao-estrategica.md` | A | Jornada, arco de consciência, mecanismo, rotas, KPI |
-| `docs/02-perguntas.md` | B, C | Tabela das 21 perguntas, interstitials e ficha completa de cada uma (gerado do JSON) |
-| `docs/03-scoring-e-regras.md` | D, E, F, G, H, I, J, K | Scoring dos pilares, IRC, ponto de atenção, perfis, desempates, prontidão, baixa aderência, segurança |
-| `docs/04-copy-resultados.md` | L, M, N, O, P, Q, R, S | Textos de perfil, faixas, pontos de atenção, pilares, captura, tela de resultado, Compatíveis, CTA |
-| `docs/05-dados-automacao-tracking.md` | T, U, V, W, X | Campos Fillout, CRM, tags, eventos, lógica condicional e automações |
-| `docs/06-testes-e-checklist.md` | Y, seção 28 | Checklist técnico e oito simulações com resultados |
-| `data/quiz.json` | — | Fonte única: perguntas, alternativas, scores, pesos, afinidades, flags |
-| `scripts/score.py` | — | Motor de scoring de referência e simulações |
-| `scripts/build_docs.py` | — | Regenera `docs/02` e os blocos gerados de `docs/03` e `docs/06` |
-
-## Como usar
-
-```bash
-python3 scripts/score.py          # roda as simulações e imprime pilares, IRC, perfil, atenção, prontidão, flags
-python3 scripts/score.py --json   # mesma saída em JSON
-python3 scripts/build_docs.py     # regenera a documentação a partir de data/quiz.json
+```
+app/                      layout, página única, rota /api/lead (adapter de webhook)
+components/quiz/          QuizShell (orquestração), SegmentedProgress, ScreenFrame, perguntas, insights, captura, processamento, segurança, retomada
+components/visualizations ConnectionLineViz, ConflictMotionViz, LoadBalanceViz, CycleViz, PartialPortrait, ResultXRayGlyph, DimensionBars, XRayRing
+components/result/        ResultDocument e seções (leitura geral, recursos, ponto de tensão, ciclo, hipótese, perfil, objetivo, índice, CTA)
+config/questions.ts       as 31 perguntas: texto, opções, scores por dimensão, pesos, efeitos de perfil, flags
+config/flow.ts            sequência de telas e progresso segmentado
+config/resultCopy.ts      textos por eixo/faixa, ponto de tensão, módulos de hipótese, pontes de recurso, descrições de perfil
+lib/scoring/              funções puras: dimensões, índice, tensão, perfis, recursos, prontidão, segurança, ciclo, hipótese, headline, insights
+lib/store.ts              estado tipado (Zustand + persist em localStorage)
+lib/analytics/track.ts    trackEvent(name, payload) com filtro de chaves seguras
+lib/integrations/         whatsapp.ts (URL + mensagem), webhook.ts (cliente da rota interna)
+lib/payload.ts            buildCRMPayload
+types/index.ts            tipos do domínio
+tests/unit, tests/e2e     Vitest e Playwright
+legacy/v1/                especificação e protótipo anteriores (não usados pela aplicação)
 ```
 
-Para alterar uma pergunta, score, peso ou afinidade: edite `data/quiz.json`, rode `build_docs.py` e `score.py`, e confira se as simulações continuam fazendo sentido.
+## Modelo de scoring
 
-## Resumo da arquitetura
+Escala base 0–4 por resposta; quanto maior, mais recurso naquele eixo. Cada eixo é normalizado para 0–100:
 
-- **21 perguntas**: 14 de leitura estratégica (12 pontuam pilares), 4 de qualificação comercial, 3 de contexto. 7 a 10 minutos.
-- **Cinco pilares** (0 a 100 cada): clareza, história, dinâmica relacional, limites e papéis, capacidade de agir.
-- **Índice de Reorganização Relacional**: média dos cinco, em quatro faixas com nomes humanos.
-- **Principal Ponto de Atenção**: pilar mais baixo, com desempate em quatro etapas.
-- **Quatro perfis** por afinidade independente: Sobrecarregada, Cobrança-afastamento, Mochila emocional, Já entendeu mas repete.
-- **Prontidão comercial** separada (0 a 7); pelo menos 4 para conversa.
-- **Flags** de baixa aderência e segurança mudam a rota, não o índice.
-- **CTA**: "Quero entender o que está por trás disso." → WhatsApp → triagem → conversa de aplicação → Compatíveis.
+```
+dimensionScore = sum(answerScore × weight) / sum(4 × weight) × 100
+```
 
-## Versão web funcional
+Respostas `null` ("não se aplica", "prefiro não responder") saem do numerador e do denominador. Perguntas não respondidas também.
 
-A pasta `web/` contém o quiz pronto para uso, com as 21 perguntas, telas de transição, captura, cálculo e tela de resultado, usando `data/quiz.json` como fonte.
-
-| Arquivo | Uso |
+| Eixo | Perguntas (peso) |
 |---|---|
-| `web/index.html` | Abra direto no navegador (duplo clique) ou hospede em qualquer servidor estático. Arquivo único, sem dependências além das fontes do Google. |
-| `web/artifact.html` | Mesma página sem o esqueleto HTML, para publicação como artefato. |
-| `web/src/` | Fontes: `app.js` (motor de scoring portado de `scripts/score.py` + interface), `copy.js` (textos do resultado), `styles.css`, `page.html`. |
-| `scripts/build_web.py` | Regenera as duas versões a partir de `web/src/` e `data/quiz.json`. |
+| Conexão e presença | Q04, Q05, Q17 |
+| Conversa e reparação | Q07 (1.25), Q08 (1.25), Q09, Q10 |
+| Parceria e reciprocidade | Q11 (1.25), Q12 (1.25), Q13, Q14 |
+| Afeto e intimidade | Q15, Q16 |
+| Respeito, confiança e futuro | Q10, Q18, Q19 |
 
-Antes de publicar para o público:
-1. Em `web/src/app.js`, troque `CONFIG.whatsappNumber` pelo número da equipe (55 + DDD + número) e rode `python3 scripts/build_web.py`.
-2. Remova ou esconda o bloco "Dados gerados para o CRM" no fim do resultado (ele existe para validar a integração).
-3. Ligue o envio dos dados: a função `track()` já empurra eventos para `window.dataLayer` (GTM); o objeto `payload` no resultado é o que deve ir para o CRM via webhook.
+Q10 participa de dois eixos por desenho.
 
-Verificação: o motor em JavaScript foi comparado ao Python nos oito cenários de `scripts/score.py` (pilares, IRC, perfil, ponto de atenção, leitura, prontidão, rota, flags e tags), com resultado idêntico.
+- **Índice de Reorganização Relacional**: média simples dos eixos com dados. Mostrado só no fim do resultado, como informação secundária.
+- **Ponto de maior tensão**: menor eixo. Empate (≤ 5 pontos) resolvido por: mais respostas 0/1 → maior peso comprometido → eixo do objetivo de 90 dias → mantém os dois ("dois pontos estão muito próximos").
+- **Eixo mais preservado**: maior eixo; empate ≤ 5 mostra dois.
+- **Perfis** (`overload`, `demand_withdraw`, `emotional_baggage`, `knows_but_repeats`): somas definidas em `config/questions.ts` (`profileEffects`) e regras em `lib/scoring/profiles.ts`. Mochila emocional pontua **apenas** por sobreposição entre Q22 (casa de origem) e o comportamento atual. Perfil só é exibido com ≥ 4 pontos; abaixo disso, "não aparece concentrado em uma única dinâmica".
+- **Ciclo**: `buildCycle` monta nós apenas com evidência; com menos de 4 nós, mostra que não houve sequência consistente.
+- **Hipótese**: `buildHypothesis` encadeia módulos (eixo → perfil → recurso preservado → tentativas → objetivo → ressalva).
+- **Prontidão comercial** (0–7): duração ≥ 6 meses, ≥ 2 tentativas, urgência ≥ 7, abertura (sem baixa aderência explícita), começar agora/semanas, investimento disponível (só "consigo investir"), intenção de agir (Q29 ≠ "só entender"/"não sei"). Classes: 0–2 LOW, 3 MEDIUM, 4–5 QUALIFIED, 6–7 HIGH. Não altera nenhum score relacional.
+- **Segurança**: Q31 "sim" → `safety_flag`, tela dedicada, sem CTA; "já aconteceu" → `safety_history_flag` no payload para revisão humana; Q10 "medo da reação dele" → `safety_preflag`.
+
+## Como alterar
+
+**Adicionar ou editar pergunta**: edite `config/questions.ts`. Cada pergunta declara `id`, `field`, `segment`, `type`, `text`, `helper`, `options` (com `dimensions`, `profileEffects`, `flags`, `exclusive`, `tag`), `dimensions` (peso por eixo) e `requireConfirm`. Para entrar no fluxo, adicione em `config/flow.ts`. Adicione o `QuestionId` em `types/index.ts`. Rode `npm run test` para conferir que os cenários continuam coerentes.
+
+**Alterar copy de resultado**: `config/resultCopy.ts` (eixos por faixa, ponto de tensão, hipótese, pontes, perfis). Microdevolutivas: `lib/scoring/insights.ts`. Headline: `lib/scoring/headline.ts`.
+
+**Webhook**: `app/api/lead/route.ts`. Valida o mínimo com Zod, repassa com 3 tentativas e backoff. O payload (`types/index.ts › CRMLeadPayload`) é enviado duas vezes: `lead_capture_complete` (após consentimento) e `cta_click` (ao clicar no CTA).
+
+**WhatsApp**: `lib/integrations/whatsapp.ts`. Mensagem visível sem valores comerciais.
+
+**UTM e origem**: `lib/utm.ts` captura `utm_*`, `source_channel` (ou `src`), `referrer` e `landing_path` no primeiro acesso e preserva na sessão.
+
+**Analytics**: `lib/analytics/track.ts`. Eventos: `quiz_view`, `quiz_start`, `segment_started`, `question_viewed`, `question_answered`, `insight_viewed`, `partial_portrait_viewed`, `quiz_complete`, `lead_capture_started`, `lead_capture_complete`, `processing_started`, `result_view`, `cta_click`, `whatsapp_start`, `safety_flag_triggered`, `quiz_abandon`. Só chaves da lista segura chegam a GA/Pixel; nenhuma resposta bruta. Eventos pós-WhatsApp (`application_started`, `application_booked`, `call_attended`, `offer_made`, `sale_completed`) pertencem ao CRM.
+
+## Privacidade
+
+As respostas ficam só no navegador (localStorage) até o consentimento. O payload para o CRM é enviado apenas após o checkbox de consentimento, na última tela de captura. Nada pessoal é hardcoded. Política de retenção deve ser definida no destino do webhook.
+
+## Deploy
+
+Projeto Next.js 15 (App Router) sem dependências de servidor além da rota `/api/lead`. Funciona em Vercel, Netlify ou qualquer Node 18+. Configure as variáveis de ambiente no painel do provedor e refaça o build.

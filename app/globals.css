@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f6f1ed;
+  --surface: #fbf8f5;
+  --surface-strong: #efe7e4;
+  --ink: #2a2229;
+  --ink-soft: #665d64;
+  --muted: #81777e;
+  --wine: #7a3a59;
+  --wine-dark: #5d2943;
+  --wine-soft: #b6879d;
+  --line: #ddd3d8;
+  --gold-muted: #aa9367;
+  --font-serif: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.font-serif { font-feature-settings: "liga", "kern"; }
+.balance { text-wrap: balance; }
+.pretty { text-wrap: pretty; }
+
+:focus-visible { outline: 2px solid var(--wine); outline-offset: 3px; border-radius: 4px; }
+
+.option-card {
+  @apply w-full text-left rounded-2xl border border-line bg-surface px-5 py-4 min-h-[56px] transition-[border-color,background-color,transform] duration-200 flex items-start gap-4;
+}
+.option-card:hover { border-color: var(--wine-soft); }
+.option-card[aria-pressed="true"], .option-card[aria-checked="true"] { border-color: var(--wine); background: rgba(122, 58, 89, 0.06); }
+.option-card:active { transform: scale(0.995); }
+.option-card:disabled { opacity: 0.6; }
+.option-mark {
+  @apply mt-[6px] h-3 w-3 shrink-0 rounded-full border border-line transition-colors duration-200;
+}
+.option-card[aria-pressed="true"] .option-mark, .option-card[aria-checked="true"] .option-mark { background: var(--wine); border-color: var(--wine); }
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-full bg-wine px-7 py-4 text-[15px] font-semibold text-surface min-h-[52px] transition-colors duration-200;
+}
+.btn-primary:hover { background: var(--wine-dark); }
+.btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-ghost {
+  @apply inline-flex items-center justify-center rounded-full px-5 py-3 text-[15px] font-medium text-ink-soft min-h-[44px] transition-colors duration-200;
+}
+.btn-ghost:hover { color: var(--ink); }
+.input {
+  @apply w-full rounded-2xl border border-line bg-surface px-5 py-4 text-lg text-ink min-h-[56px] outline-none transition-colors;
+}
+.input:focus { border-color: var(--wine); }
+.eyebrow { @apply text-[12px] font-semibold uppercase tracking-[0.14em] text-wine; }
+.card { @apply rounded-3xl border border-line bg-surface p-6 md:p-8; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
