@@ -11,7 +11,7 @@ test.describe("Raio-X do Seu Relacionamento", () => {
     await expect(page.locator("text=/Pergunta \\d+ de/")).toHaveCount(0);
 
     await driveTo(page, DEMAND_WITHDRAW, "i1");
-    await expect(page.getByText("A conexão ainda aparece, mas parece oscilar.")).toBeVisible();
+    await expect(page.getByText("Existe conexão preservada aqui.")).toBeVisible();
     await driveTo(page, DEMAND_WITHDRAW, "i2");
     await expect(page.getByText("tem uma sequência se formando aqui")).toBeVisible();
     await driveTo(page, DEMAND_WITHDRAW, "partial");

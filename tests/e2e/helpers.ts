@@ -60,7 +60,7 @@ export async function capture(page: Page, name = "Renata", phone = "11999990000"
   await expect(page.locator('[data-screen="email"]')).toBeVisible();
   // consentimento não vem marcado e é obrigatório
   await page.getByTestId("confirm").click();
-  await expect(page.getByRole("alert")).toBeVisible();
+  await expect(page.locator("#consent-error")).toBeVisible();
   await page.getByTestId("consent").check();
   if (email) { await page.fill("#lead_email", email); await page.getByTestId("confirm").click(); }
   else await page.getByTestId("skip-email").click();
